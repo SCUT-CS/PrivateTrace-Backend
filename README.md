@@ -43,9 +43,9 @@ private boolean encrypt(Bitmap img) {
 
 - 核心算法模块
 
-  - [ ] 加密数据结构的序列化
+  - [x] 加密数据结构的序列化
 
-  - [ ] 关键流程封装
+  - [x] 关键流程封装
 
-  - [ ] 使用Proprieties代替Constant
-  - [ ] 封装接口
+  - [x] 使用Proprieties代替Constant
+  - [x] 封装接口
