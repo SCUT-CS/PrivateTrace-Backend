@@ -1,11 +1,13 @@
 package cn.edu.scut.priloc.service;
 
+import Priloc.data.EncTrajectory;
+
 import java.util.List;
 
 public interface ETLDsService {
-    List<eTLDs> selectByPage(int currentPage,int pageSize);
+    List<EncTrajectory> selectByPage(int currentPage, int pageSize);
 
-    void add(TLDs tlds);
+    void add(EncTrajectory encTrajectory);
 
-    List<eTLDs> selectByTLDs(int beginTime,int endTime);
+    List<EncTrajectory> selectByETLDs(EncTrajectory encTrajectory);
 }
