@@ -30,6 +30,13 @@
       <version>1.2.83</version>
     </dependency>
 
+    <dependency>
+      <groupId>cn.edu.scut</groupId>
+      <artifactId>PriLoc</artifactId>
+      <version>1.0</version>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>PriTLD</finalName>
