@@ -1,23 +1,80 @@
 package cn.edu.scut.priloc.web.servlet;
 
+import Priloc.data.EncTrajectory;
+import Priloc.data.Trajectory;
+import Priloc.data.TrajectoryReader;
+import cn.edu.scut.priloc.mapper.BPlusTree;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.service.imp.EncTrajectoryServiceImp;
+import com.alibaba.fastjson.JSON;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.ParseException;
+import java.util.List;
+
 @WebServlet("/encTrajectory/*")
 public class EncTrajectoryServlet extends BaseServlet{
     private EncTrajectoryService etlDsService = new EncTrajectoryServiceImp();
+    private  static BPlusTree bPlusTree=new BPlusTree();
+    static {
+        //从磁盘中读取索引树
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(""));
+            bPlusTree = (BPlusTree) inputStream.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     void selectByPage(HttpServletRequest request, HttpServletResponse response)
     {
 
     }
 
-    void add(HttpServletRequest request,HttpServletResponse response)
-    {
-        //先解密再调用
+    void add(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        BufferedReader reader = request.getReader();
+        String jsonString = reader.readLine();
+
+        EncTrajectory encTrajectory = JSON.parseObject(jsonString,EncTrajectory.class);
+
+        etlDsService.add(bPlusTree,encTrajectory);
+    }
+    void selectByETLDs(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        //从前端接收
+        BufferedReader reader = request.getReader();
+        String jsonString = reader.readLine();
+
+        EncTrajectory encTrajectory = JSON.parseObject(jsonString,EncTrajectory.class);
+
+        etlDsService.selectByETLDs(bPlusTree,encTrajectory);
+
+    }
+
+    void upload(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException {
+        //先加密再调用
+
+        //从前端接收一个文件
+        File file=new File("");
+        TrajectoryReader reader=new TrajectoryReader(file);
+        Trajectory trajectory = reader.load();
+        //加密
+        EncTrajectory encTrajectory=new EncTrajectory(trajectory);
+
+        //传回前端
+        String jsonString = JSON.toJSONString(encTrajectory);
+        response.getWriter().write(jsonString);
+        /*
+        其实可以在这里一步到位完成查询、添加的功能，但为了后期功能拓展，还是功能分开
+        //先查询
+        List<EncTrajectory> etlDs = etlDsService.selectByETLDs(bPlusTree, encTrajectory);
+        //添加到索引树中
+        etlDsService.add(bPlusTree,encTrajectory);
+        */
     }
 
 }

@@ -10,5 +10,5 @@ public interface EncTrajectoryService {
 
     void add(BPlusTree bPlusTree, EncTrajectory encTrajectory);
 
-    List<EncTrajectory> selectByETLDs(EncTrajectory encTrajectory);
+    List<EncTrajectory> selectByETLDs(BPlusTree bPlusTree,EncTrajectory encTrajectory);
 }

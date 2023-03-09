@@ -17,7 +17,7 @@ public class EncTrajectoryServiceImp implements EncTrajectoryService {
     public void add(BPlusTree bPlusTree,EncTrajectory encTrajectory){
 
     }
-    public List<EncTrajectory> selectByETLDs(EncTrajectory encTrajectory) {
+    public List<EncTrajectory> selectByETLDs(BPlusTree bPlusTree,EncTrajectory encTrajectory) {
         return null;
     }
 }

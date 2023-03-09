@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="PriTLD:war">
+    <output-path>$PROJECT_DIR$/PriTLD/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>PriTLD</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="PriTLD.war">
+      <element id="artifact" artifact-name="PriTLD:war exploded" />
+    </root>
+  </artifact>
+</component>
