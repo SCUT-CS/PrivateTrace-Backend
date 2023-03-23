@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>奇怪的页面</title>
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+</head>
+<body>
+<div id= "app" class="box">
+    <div class="fl">
+        <div class="container">
+          <a href="index.html"><button class="btn">跳转到页面2</button></a>
+          <a href="search.html"><button class="btn">跳转到页面2</button></a>
+        </div>
+    </div>
+    <div class="fr">
+        <div id="table-container" class="tabBox">
+            <table id="my-table" class="tab">
+              <thead>
+                <tr>
+                    <th>name</th>
+                    <th>start</th>
+                    <th>end</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <form action="" class="form">
+                <button id="prev-btn" class="btn" type="button">上一页</button>
+                <button id="next-btn" class="btn" type="button">下一页</button>
+        </form>
+    </div>
+</div>
+<div>
+    <script src="js/vue.js"></script>
+    <script src="js/axios-0.18.0.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+
+            mounted(){
+
+            },
+            methods:{
+
+            },
+            data(){
+                return{
+
+                }
+            }
+        })
+    </script>
+</div>
+</body>
+<script>
+let currentPage = 1;
+var rowsPerPage = 8; // 每页显示3行数据
+var table = document.getElementById("my-table");
+var rows = table.tBodies[0].rows;
+var totalPages = Math.ceil(table.rows.length / rowsPerPage);
+// 显示指定页码的行
+function showRows(page) {
+  var start = (page - 1) * rowsPerPage;
+  var end = start + rowsPerPage;
+
+  for (var i = 0; i < rows.length; i++) {
+    if (i >= start && i < end) {
+      rows[i].style.display = "table-row";
+    } else {
+      rows[i].style.display = "none";
+    }
+  }
+};
+// 初始化表格，显示第一页数据
+showRows(currentPage);
+
+// 上一页按钮点击事件
+document.getElementById("prev-btn").addEventListener("click", function() {
+  if (currentPage > 1) {
+    currentPage--;
+    showRows(currentPage);
+  }
+});
+
+// 下一页按钮点击事件
+document.getElementById("next-btn").addEventListener("click", function() {
+  if (currentPage < totalPages) {
+    currentPage++;
+    showRows(currentPage);
+  }
+});
+</script>
+
+</html>

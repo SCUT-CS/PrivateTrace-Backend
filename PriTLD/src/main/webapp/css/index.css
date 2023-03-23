@@ -1,0 +1,50 @@
+.tabBox{
+    height: 90%;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.tab{
+    margin: 20px auto 0;
+    border-collapse: collapse;
+}
+
+.tab th,
+.tab td{
+    font-size: 20px;
+    padding: 5px 30px;
+    border: 1px solid #829d7a;
+}
+
+.tab th{
+    color: #eff6ed;
+    background-color: #829d7a;
+}
+
+.form{
+    width: 500px;
+    margin: 0 auto;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.btn{
+    color: #829d7a;
+    background-color: #eff6ed;
+    border: 1px solid #829d7a;
+}
+
+.btn:hover{
+    color: #eff6ed;
+    background-color: #829d7a;
+}
+
+#prev-btn,
+#next-btn
+{
+    width: 90px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 5px;
+}

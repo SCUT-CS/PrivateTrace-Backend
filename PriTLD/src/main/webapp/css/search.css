@@ -1,0 +1,13 @@
+.fr{
+    font-size: 16px;
+}
+
+.fr #input{
+    margin-top:calc(20% - 20px);
+    height: 45px;
+    width: 550px;
+    margin-left: 10px;
+    font-size: 16px;
+    border: 2px solid #829d7a;
+    border-radius: 10px;
+}
