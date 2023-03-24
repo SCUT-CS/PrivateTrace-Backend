@@ -1,5 +1,7 @@
 package pojo;
 
+import Priloc.data.Trajectory;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -19,12 +21,11 @@ public class BeginEndPath implements Serializable {
     public BeginEndPath() {
 
     }
-    public BeginEndPath(Long testTime) {
-        this.beginTime = testTime;
-        long l = 1 + ((long)(new Random().nextDouble()*1000));
-        this.endTime = testTime + l;
-        this.totalTime = endTime - beginTime;
+
+    public BeginEndPath(Trajectory trajectory) {
+
     }
+
     public BeginEndPath(Long beginTime, Long endTime, String path) {
         this.beginTime = beginTime;
         this.endTime = endTime;

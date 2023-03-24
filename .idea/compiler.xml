@@ -11,8 +11,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="PriLoc" target="19" />
-      <module name="PriTLD" target="19" />
+      <module name="PriLoc" target="17" />
+      <module name="PriTLD" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

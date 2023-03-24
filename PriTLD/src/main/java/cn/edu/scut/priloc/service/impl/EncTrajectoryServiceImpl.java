@@ -1,4 +1,4 @@
-package cn.edu.scut.priloc.service.imp;
+package cn.edu.scut.priloc.service.impl;
 
 import Priloc.data.EncTrajectory;
 import cn.edu.scut.priloc.mapper.BPlusTree;
@@ -9,7 +9,7 @@ import java.util.List;
 * 索引树功能的具体实现
 * 索引树代码写在这里（大概
 */
-public class EncTrajectoryServiceImp implements EncTrajectoryService {
+public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     public List<EncTrajectory> selectByPage(int currentPage, int pageSize) {
         return null;
     }
