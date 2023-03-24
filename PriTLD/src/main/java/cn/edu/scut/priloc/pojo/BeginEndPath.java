@@ -1,4 +1,4 @@
-package pojo;
+package cn.edu.scut.priloc.pojo;
 
 import Priloc.data.Trajectory;
 
@@ -23,7 +23,9 @@ public class BeginEndPath implements Serializable {
     }
 
     public BeginEndPath(Trajectory trajectory) {
-
+        this.beginTime = trajectory.getTLDs().get(0).getDate().getTime();
+        this.endTime = trajectory.getTLDs().get(trajectory.getTLDs().size() - 1).getDate().getTime();
+        this.totalTime = this.endTime - this.beginTime;
     }
 
     public BeginEndPath(Long beginTime, Long endTime, String path) {

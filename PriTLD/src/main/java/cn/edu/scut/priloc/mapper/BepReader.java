@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+
+import cn.edu.scut.priloc.pojo.BeginEndPath;
 import lombok.Data;
 import org.junit.Test;
 
@@ -28,7 +30,7 @@ public class BepReader {
         return sc.hasNext();
     }
 
-    private pojo.BeginEndPath getData(){
+    private BeginEndPath getData(){
         Date beginTime = new Date();
         Date endTime = new Date();
         try {
@@ -50,14 +52,14 @@ public class BepReader {
             System.out.println("error");
             e.printStackTrace();
         }
-        return new pojo.BeginEndPath(beginTime.getTime(), endTime.getTime(), this.path);
+        return new BeginEndPath(beginTime.getTime(), endTime.getTime(), this.path);
     }
 
     public BTreePlus readFromFiles(int numOfUsers){
         File file = new File(this.path);
         File[] files = file.listFiles();
-        BTreePlus<pojo.BeginEndPath> btPlus=new BTreePlus<>();
-        Entry<pojo.BeginEndPath> entryNode;
+        BTreePlus<BeginEndPath> btPlus=new BTreePlus<>();
+        Entry<BeginEndPath> entryNode;
         for (int i = 0; i <numOfUsers ; i++) {
             String id = files[i].getName();
             File trajectory = files[i].listFiles()[0];
@@ -65,7 +67,7 @@ public class BepReader {
             int l = trajectories.length;
             for (int j = 0; j < l; j++) {
                 BepReader bepReader = new BepReader(trajectories[j].getPath());
-                pojo.BeginEndPath beginEndPath = bepReader.getData();
+                BeginEndPath beginEndPath = bepReader.getData();
                 beginEndPath.setUserId(id);
                 entryNode =new Entry<>(beginEndPath.getBeginTime(),beginEndPath);
                 btPlus.addEntry(entryNode);
