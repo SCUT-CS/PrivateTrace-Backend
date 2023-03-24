@@ -1,5 +1,6 @@
 package cn.edu.scut.priloc.mapper;
 
+import cn.edu.scut.priloc.pojo.BeginEndPath;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -38,7 +39,7 @@ public class BTreePlus<V> implements Serializable {
     }
 
     //查找
-    public ArrayList find(pojo.BeginEndPath bep){
+    public ArrayList find(BeginEndPath bep){
         ArrayList<V> resultOfFind = new ArrayList<>();
         Long beginFlag = bep.getBeginTime() - this.getMaxTimeLength();
         System.out.println("开始遍历的beginTime：" + beginFlag);
@@ -70,9 +71,9 @@ public class BTreePlus<V> implements Serializable {
                 for (int i = 0; i < rootOfFind.getKeysSize(); i++) {
                     //
                     if(rootOfFind.keyAt(i) >= beginFlag &&
-                            ((pojo.BeginEndPath)rootOfFind.entryAt(i).getValue()).getEndTime() > bep.getBeginTime()
+                            ((BeginEndPath)rootOfFind.entryAt(i).getValue()).getEndTime() > bep.getBeginTime()
                             && rootOfFind.keyAt(i) < bep.getEndTime()
-                            && ((pojo.BeginEndPath)rootOfFind.entryAt(i).getValue()).getUserId() != bep.getUserId()
+                            && ((BeginEndPath)rootOfFind.entryAt(i).getValue()).getUserId() != bep.getUserId()
                     )
                     {
 //                        System.out.println(rootOfFind.entryAt(i));
@@ -87,8 +88,8 @@ public class BTreePlus<V> implements Serializable {
 
     //添加新数据
     public void addEntry(Entry entry){
-        if(((pojo.BeginEndPath)(entry.getValue())).getTotalTime() > this.maxTimeLength){
-            this.maxTimeLength = ((pojo.BeginEndPath)(entry.getValue())).getTotalTime();
+        if(((BeginEndPath)(entry.getValue())).getTotalTime() > this.maxTimeLength){
+            this.maxTimeLength = ((BeginEndPath)(entry.getValue())).getTotalTime();
         }
         //先判断头节点是否存在，不存在则为该树第一个数据
         //直接插入头节点情况
