@@ -1,7 +1,7 @@
 package cn.edu.scut.priloc.service.impl;
 
 import Priloc.data.EncTrajectory;
-import cn.edu.scut.priloc.mapper.BPlusTree;
+import cn.edu.scut.priloc.mapper.BTreePlus;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 
 import java.util.List;
@@ -14,10 +14,10 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         return null;
     }
 
-    public void add(BPlusTree bPlusTree,EncTrajectory encTrajectory){
+    public void add(BTreePlus bTreePlus, EncTrajectory encTrajectory){
 
     }
-    public List<EncTrajectory> selectByETLDs(BPlusTree bPlusTree,EncTrajectory encTrajectory) {
+    public List<EncTrajectory> selectByETLDs(BTreePlus bTreePlus,EncTrajectory encTrajectory) {
         return null;
     }
 }

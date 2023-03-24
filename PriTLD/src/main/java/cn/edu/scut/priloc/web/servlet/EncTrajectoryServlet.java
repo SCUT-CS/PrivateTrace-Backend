@@ -3,8 +3,8 @@ package cn.edu.scut.priloc.web.servlet;
 import Priloc.data.EncTrajectory;
 import Priloc.data.Trajectory;
 import Priloc.data.TrajectoryReader;
-import cn.edu.scut.priloc.mapper.BPlusTree;
 import cn.edu.scut.priloc.mapper.BTreePlus;
+import cn.edu.scut.priloc.mapper.Entry;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.service.impl.EncTrajectoryServiceImpl;
 import com.alibaba.fastjson.JSON;
@@ -62,8 +62,10 @@ public class EncTrajectoryServlet extends BaseServlet{
         File file=new File("");
         TrajectoryReader reader=new TrajectoryReader(file);
         Trajectory trajectory = reader.load();
+        //添加到索引树上
         pojo.BeginEndPath beginEndPath=new pojo.BeginEndPath(trajectory);
-        bTreePlus.
+        Entry<pojo.BeginEndPath> entry=new Entry<>(beginEndPath.getBeginTime(), beginEndPath);
+        bTreePlus.addEntry(entry);
         //加密
         EncTrajectory encTrajectory=new EncTrajectory(trajectory);
 
