@@ -45,7 +45,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     @Override
     public void add(EncTrajectory encTrajectory) {
         //添加到索引树上 调用service方法
-        BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
+        BeginEndPath beginEndPath=new BeginEndPath(trajectory);
         Entry<BeginEndPath> entry=new Entry<>(beginEndPath.getBeginTime(), beginEndPath);
         bTreePlus.addEntry(entry);
         //序列化新的树
