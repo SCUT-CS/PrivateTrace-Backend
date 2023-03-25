@@ -1,10 +1,13 @@
 package cn.edu.scut.priloc.web.servlet;
 
-import Priloc.data.*;
-import cn.edu.scut.priloc.service.TrajectoryService;
-import cn.edu.scut.priloc.service.impl.TrajectoryImpl;
+import cn.edu.scut.priloc.pojo.EncTimeLocationData;
+import cn.edu.scut.priloc.pojo.EncTrajectory;
+import cn.edu.scut.priloc.pojo.TimeLocationData;
+import cn.edu.scut.priloc.pojo.Trajectory;
+import cn.edu.scut.priloc.util.TrajectoryReader;
 import com.alibaba.fastjson.JSON;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -17,24 +20,22 @@ import java.util.List;
 
 @WebServlet("/trajectory/*")
 public class TrajectoryServlet extends  BaseServlet{
-    private TrajectoryService trajectoryService =new TrajectoryImpl();
     private HttpSession session;
-    void encryptAndPreview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    void encrypt(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Trajectory trajectory = (Trajectory) request.getAttribute("tlds");
         //加密
         EncTrajectory encTrajectory=new EncTrajectory(trajectory);
-        List<EncTmLocData> eTlds = encTrajectory.geteTLDs();
-        String eTldsJson = JSON.toJSONString(eTlds);
-        response.getWriter().write(eTldsJson);
-
+        List<EncTimeLocationData> eTlds = encTrajectory.geteTlds();
         //加密完成后删除明文轨迹
-        session=request.getSession();
         session.removeAttribute("tlds");
+        //请求转发到密文预览
         request.setAttribute("eTlds",encTrajectory);
+        request.getRequestDispatcher("/encTrajectory/preview").forward(request,response);
+
     }
     void previewFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Trajectory trajectory = (Trajectory) request.getAttribute("tlds");
-        List<TimeLocationData> tlds = trajectory.getTLDs();
+        List<TimeLocationData> tlds = trajectory.getTlds();
         String tldsJson = JSON.toJSONString(tlds);
         response.getWriter().write(tldsJson);
     }
@@ -46,6 +47,7 @@ public class TrajectoryServlet extends  BaseServlet{
         String userId = request.getParameter("userId");
         File file=new File("");
         //获取明文轨迹
+
         TrajectoryReader reader=new TrajectoryReader(file);
         Trajectory trajectory = reader.load();
 
@@ -60,12 +62,5 @@ public class TrajectoryServlet extends  BaseServlet{
 
         /*response.getWriter().write(eTldsJson);
         response.getWriter().write(tldsJson);*/
-        /*
-        其实可以在这里一步到位完成查询、添加的功能，但为了后期功能拓展，还是功能分开
-        //先查询
-        List<EncTrajectory> etlDs = etlDsService.selectByETLDs(bPlusTree, encTrajectory);
-        //添加到索引树中
-        etlDsService.add(bPlusTree,encTrajectory);
-        */
     }
 }

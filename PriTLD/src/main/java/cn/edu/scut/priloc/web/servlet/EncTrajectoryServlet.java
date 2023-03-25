@@ -1,22 +1,15 @@
 package cn.edu.scut.priloc.web.servlet;
 
 import Priloc.data.EncTrajectory;
-import Priloc.data.Trajectory;
-import Priloc.data.TrajectoryReader;
-import cn.edu.scut.priloc.mapper.BTreePlus;
-import cn.edu.scut.priloc.mapper.Entry;
-import cn.edu.scut.priloc.pojo.BeginEndPath;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.service.impl.EncTrajectoryServiceImpl;
 import com.alibaba.fastjson.JSON;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.text.ParseException;
+import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/encTrajectory/*")
@@ -29,17 +22,20 @@ public class EncTrajectoryServlet extends BaseServlet{
 
     }
 
+    void preview(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        EncTrajectory eTlds = (EncTrajectory) request.getAttribute("eTlds");
+        String eTldsJson = JSON.toJSONString(eTlds);
+        response.getWriter().write(eTldsJson);
+    }
     void add(HttpServletRequest request,HttpServletResponse response) throws IOException {
-
+        //需不需要分开暂定
         //从session域拿到密文轨迹
         session=request.getSession();
         EncTrajectory encTrajectory = (EncTrajectory) session.getAttribute("eTlds");
 
-        etlDsService.add(encTrajectory);
+
 
         //EncTrajectory encTrajectory = JSON.parseObject(jsonString,EncTrajectory.class);
-
-        etlDsService.add(encTrajectory);
     }
     void selectByETLDs(HttpServletRequest request,HttpServletResponse response) throws IOException {
         //从session域拿到密文轨迹
@@ -50,6 +46,8 @@ public class EncTrajectoryServlet extends BaseServlet{
 
         //调用同心圆树算法
 
+        //查询完成后添加到索引树
+        etlDsService.add(encTrajectory);
     }
 
 

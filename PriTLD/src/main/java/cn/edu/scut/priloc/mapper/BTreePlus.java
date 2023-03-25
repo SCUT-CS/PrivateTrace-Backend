@@ -39,7 +39,7 @@ public class BTreePlus<V> implements Serializable {
     }
 
     //查找
-    public ArrayList find(BeginEndPath bep){
+    public ArrayList<V> find(BeginEndPath bep){
         ArrayList<V> resultOfFind = new ArrayList<>();
         Long beginFlag = bep.getBeginTime() - this.getMaxTimeLength();
         System.out.println("开始遍历的beginTime：" + beginFlag);
