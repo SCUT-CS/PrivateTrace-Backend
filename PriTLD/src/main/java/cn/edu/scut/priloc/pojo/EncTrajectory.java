@@ -1,5 +1,7 @@
 package cn.edu.scut.priloc.pojo;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class EncTrajectory {
@@ -8,8 +10,13 @@ public class EncTrajectory {
     private String path;
 
     public EncTrajectory(Trajectory trajectory) {
+        this.path = trajectory.getPath();
+        List<TimeLocationData> tlds = trajectory.getTlds();
+        this.eTlds = new ArrayList<>();
+        for (TimeLocationData tld : tlds) {
+            eTlds.add(tld.encrypt());
+        }
     }
-
     public List<EncTimeLocationData> geteTlds() {
         return eTlds;
     }

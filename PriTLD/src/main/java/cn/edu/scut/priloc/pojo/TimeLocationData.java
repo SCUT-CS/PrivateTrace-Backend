@@ -8,6 +8,9 @@ public class TimeLocationData {
     private Location location;
     private Date date;
 
+    public EncTimeLocationData encrypt(){
+        return new EncTimeLocationData(this);
+    }
     public TimeLocationData(Location location, Date date) {
         this.location = location;
         this.date = date;
@@ -31,7 +34,7 @@ public class TimeLocationData {
 
     @Override
     public String toString() {
-        return "Trajectory{" +
+        return "TimeLocationData{" +
                 "location=" + location +
                 ", date=" + date +
                 '}';
