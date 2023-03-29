@@ -1,28 +1,38 @@
 package cn.edu.scut.priloc.pojo;
 
+import Priloc.area.basic.EncryptedPoint;
+import Priloc.area.basic.Point;
 import Priloc.geo.Location;
 import Priloc.utils.Utils;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 public class EncTimeLocationData {
-    private Location location;
+    private EncLocation encLocation;
+    private EncryptedPoint encPoint;
     private Date date;
 
     public EncTimeLocationData(TimeLocationData tld) {
+
         this.date = tld.getDate();
         //对地址进行加密
-        double encLati= Utils.encryptDouble(tld.getLocation().getLatitude(),8).longValue();
-        double encLongi= Utils.encryptDouble(tld.getLocation().getLongitude(),8).longValue();
-        this.location = new Location(encLati,encLongi);
+        Location location = tld.getLocation();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        BigInteger encLati= Utils.encryptDouble(latitude,8);
+        BigInteger encLongi= Utils.encryptDouble(longitude,8);
+        this.encLocation = new EncLocation(encLati,encLongi);
+        //生成xyz
+        this.encPoint = new EncryptedPoint(new Point(location));
     }
 
-    public Location getLocation() {
-        return location;
+    public EncLocation getEncLocation() {
+        return encLocation;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setEncLocation(EncLocation encLocation) {
+        this.encLocation = encLocation;
     }
 
     public Date getDate() {
@@ -33,10 +43,19 @@ public class EncTimeLocationData {
         this.date = date;
     }
 
+    public EncryptedPoint getEncPoint() {
+        return encPoint;
+    }
+
+    public void setEncPoint(EncryptedPoint encPoint) {
+        this.encPoint = encPoint;
+    }
+
     @Override
     public String toString() {
         return "EncTimeLocationData{" +
-                "location=" + location +
+                "encLocation=" + encLocation +
+                ", encPoint=" + encPoint +
                 ", date=" + date +
                 '}';
     }
