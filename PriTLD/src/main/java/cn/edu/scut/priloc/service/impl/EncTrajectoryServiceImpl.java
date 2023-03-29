@@ -1,6 +1,6 @@
 package cn.edu.scut.priloc.service.impl;
 
-import Priloc.data.EncTrajectory;
+import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.mapper.BTreePlus;
 import cn.edu.scut.priloc.mapper.Entry;
 import cn.edu.scut.priloc.pojo.BeginEndPath;

@@ -1,7 +1,6 @@
 package cn.edu.scut.priloc.service;
 
-import Priloc.data.EncTrajectory;
-import cn.edu.scut.priloc.mapper.BTreePlus;
+import cn.edu.scut.priloc.pojo.*;
 
 import java.util.List;
 

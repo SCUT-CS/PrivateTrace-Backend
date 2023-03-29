@@ -1,6 +1,6 @@
 package cn.edu.scut.priloc.web.servlet;
 
-import Priloc.data.EncTrajectory;
+import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.service.impl.EncTrajectoryServiceImpl;
 import com.alibaba.fastjson.JSON;
