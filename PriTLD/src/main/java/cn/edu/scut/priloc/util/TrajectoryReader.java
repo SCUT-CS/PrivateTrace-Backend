@@ -28,7 +28,7 @@ public class TrajectoryReader {
         this.path=path;
         this.scanner=new TrajectoryReader(new File(path)).getScanner();
     }
-    public Trajectory load() throws ParseException {
+    public Trajectory load(String userId) throws ParseException {
         List<TimeLocationData> tlds = new ArrayList<>();
         while(scanner.hasNext()){
             String[] tokens = scanner.next().split(",");
@@ -38,7 +38,7 @@ public class TrajectoryReader {
             Location location = new Location(Double.parseDouble(tokens[0]),Double.parseDouble(tokens[1]));
             tlds.add(new TimeLocationData(location,date));
         }
-        return new Trajectory(tlds,path);
+        return new Trajectory(tlds,null,userId);
     }
 
     public Scanner getScanner() {

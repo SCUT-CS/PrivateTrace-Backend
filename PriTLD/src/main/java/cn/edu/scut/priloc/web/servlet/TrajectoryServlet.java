@@ -1,6 +1,5 @@
 package cn.edu.scut.priloc.web.servlet;
 
-import cn.edu.scut.priloc.pojo.EncTimeLocationData;
 import cn.edu.scut.priloc.pojo.EncTrajectory;
 import cn.edu.scut.priloc.pojo.TimeLocationData;
 import cn.edu.scut.priloc.pojo.Trajectory;
@@ -9,7 +8,6 @@ import com.alibaba.fastjson.JSON;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -25,7 +23,6 @@ public class TrajectoryServlet extends  BaseServlet{
         Trajectory trajectory = (Trajectory) request.getAttribute("tlds");
         //加密
         EncTrajectory encTrajectory=new EncTrajectory(trajectory);
-        List<EncTimeLocationData> eTlds = encTrajectory.geteTlds();
         //加密完成后删除明文轨迹
         session.removeAttribute("tlds");
         //请求转发到密文预览
@@ -49,15 +46,15 @@ public class TrajectoryServlet extends  BaseServlet{
         //获取明文轨迹
 
         TrajectoryReader reader=new TrajectoryReader(file);
-        Trajectory trajectory = reader.load();
+        Trajectory trajectory = reader.load(userId);
 
         //安全性考虑，传到session
         session = request.getSession();
         session.setAttribute("tlds",trajectory);
 
-        String tldsJson = JSON.toJSONString(trajectory);
+        //String tldsJson = JSON.toJSONString(trajectory);
         //String eTldsJson = JSON.toJSONString(encTrajectory);
-        response.addCookie(new Cookie("tlds",tldsJson));
+        //response.addCookie(new Cookie("tlds",tldsJson));
         //response.addCookie(new Cookie("eTlds",eTldsJson));
 
         /*response.getWriter().write(eTldsJson);

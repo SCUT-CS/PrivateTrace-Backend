@@ -1,6 +1,6 @@
 package cn.edu.scut.priloc.web.servlet;
 
-import cn.edu.scut.priloc.pojo.*;
+import cn.edu.scut.priloc.pojo.EncTrajectory;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.service.impl.EncTrajectoryServiceImpl;
 import com.alibaba.fastjson.JSON;
@@ -9,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 @WebServlet("/encTrajectory/*")
@@ -33,8 +35,14 @@ public class EncTrajectoryServlet extends BaseServlet{
         session=request.getSession();
         EncTrajectory encTrajectory = (EncTrajectory) session.getAttribute("eTlds");
 
+        //用用户id和时间作为文件名
+        String path="/DataBase/"+encTrajectory.getUserId()+"/"+System.currentTimeMillis();
+        encTrajectory.setPath(path);
+        //将轨迹存储到数据库（反序列化）
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
+        outputStream.writeObject(encTrajectory);
 
-
+        etlDsService.add(encTrajectory);
         //EncTrajectory encTrajectory = JSON.parseObject(jsonString,EncTrajectory.class);
     }
     void selectByETLDs(HttpServletRequest request,HttpServletResponse response) throws IOException {
@@ -47,7 +55,10 @@ public class EncTrajectoryServlet extends BaseServlet{
         //调用同心圆树算法
 
         //查询完成后添加到索引树
-        etlDsService.add(encTrajectory);
+        session.setAttribute("eTlds",encTrajectory);
+        request.getRequestDispatcher("/encTrajectory/add");
+
+
     }
 
 

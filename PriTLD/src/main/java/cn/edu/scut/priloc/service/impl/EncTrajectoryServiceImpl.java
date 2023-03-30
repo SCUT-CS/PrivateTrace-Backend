@@ -17,7 +17,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
 
     private BTreePlus getTree(){
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(""));
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("PriTLD/DataBase"));
             BTreePlus bTreePlus = (BTreePlus) inputStream.readObject();
             return bTreePlus;
         } catch (IOException e) {
@@ -29,7 +29,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     private void storeTree(BTreePlus bTreePlus){
         ObjectOutputStream outputStream = null;
         try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(""));
+            outputStream = new ObjectOutputStream(new FileOutputStream("PriTLD/DataBase"));
             outputStream.writeObject(bTreePlus);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -55,6 +55,19 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
 
     @Override
     public void add(EncTrajectory encTrajectory) {
+        String path="PriTLD/DataBase/";
+        //创建以该用户id命名的目录,文件名为当前时间
+        File file = new File(path+"001");
+        file.mkdir();
+        encTrajectory.setPath(path+"/"+System.currentTimeMillis());
+        //将轨迹存储到数据库（反序列化）
+        ObjectOutputStream outputStream = null;
+        try {
+            outputStream = new ObjectOutputStream(new FileOutputStream(encTrajectory.getPath()));
+            outputStream.writeObject(encTrajectory);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         //添加到索引树上 调用service方法
         BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
         Entry<BeginEndPath> entry=new Entry<>(beginEndPath.getBeginTime(), beginEndPath);

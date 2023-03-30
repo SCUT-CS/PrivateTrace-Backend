@@ -2,9 +2,10 @@ package cn.edu.scut.priloc.pojo;
 
 import Priloc.geo.Location;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TimeLocationData {
+public class TimeLocationData implements Serializable {
     private Location location;
     private Date date;
 

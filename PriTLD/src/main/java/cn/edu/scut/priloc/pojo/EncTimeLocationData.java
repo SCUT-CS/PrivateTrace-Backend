@@ -5,10 +5,11 @@ import Priloc.area.basic.Point;
 import Priloc.geo.Location;
 import Priloc.utils.Utils;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 
-public class EncTimeLocationData {
+public class EncTimeLocationData implements Serializable {
     private EncLocation encLocation;
     private EncryptedPoint encPoint;
     private Date date;
