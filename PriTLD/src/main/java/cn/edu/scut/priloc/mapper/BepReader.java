@@ -1,14 +1,12 @@
 package cn.edu.scut.priloc.mapper;
 
-import java.io.*;
-import java.text.ParseException;
+import cn.edu.scut.priloc.pojo.BeginEndPath;
+import lombok.Data;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-
-import cn.edu.scut.priloc.pojo.BeginEndPath;
-import lombok.Data;
-import org.junit.Test;
 
 
 @Data

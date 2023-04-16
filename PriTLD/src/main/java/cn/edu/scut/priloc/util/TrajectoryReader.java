@@ -38,6 +38,7 @@ public class TrajectoryReader {
             Location location = new Location(Double.parseDouble(tokens[0]),Double.parseDouble(tokens[1]));
             tlds.add(new TimeLocationData(location,date));
         }
+        scanner.close();
         return new Trajectory(tlds,null,userId);
     }
 

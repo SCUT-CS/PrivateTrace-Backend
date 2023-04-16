@@ -12,19 +12,12 @@
     <artifactId>priloc</artifactId>
     <version>0.0.1-SNAPSrHOT</version>
     <packaging>war</packaging>
-    <name>IoTPlatform</name>
-    <description>IoTPlatform</description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.10</version>
-        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -47,6 +40,12 @@
             <groupId>cn.edu.scut</groupId>
             <artifactId>PriLoc</artifactId>
             <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
         </dependency>
     </dependencies>
 

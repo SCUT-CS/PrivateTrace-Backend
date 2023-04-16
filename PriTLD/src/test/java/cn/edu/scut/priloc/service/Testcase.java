@@ -18,14 +18,14 @@ public class Testcase {
     public void testAdd() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");
         Trajectory trajectory=reader.load("001");
-        File file = new File("PriTLD/DataBase/001");
+        File file = new File("DataBase/001");
         System.out.println(file.getAbsoluteFile());
         System.out.println(file.mkdir());
 
         //用用户id和时间作为文件名
-        String path="PriTLD/DataBase/"+trajectory.getUserId()+"/"+System.currentTimeMillis();
+        String path="DataBase/"+trajectory.getUserId()+"/"+System.currentTimeMillis()+".txt";
         trajectory.setPath(path);
-        //将轨迹存储到数据库（反序列化）
+        //将轨迹存储到数据库（序列化）
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
         outputStream.writeObject(trajectory);
     }

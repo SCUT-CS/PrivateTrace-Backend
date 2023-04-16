@@ -21,17 +21,21 @@ public class doController {
 
     @Autowired
     private EncTrajectoryService eltdsService;
-    @GetMapping("/upload")
+    @GetMapping("/upload/{userId}")
     public Trajectory upload(
             @RequestBody MultipartFile multipartFile,
-            @RequestParam String userId,
+            @PathVariable String userId,
             HttpServletRequest request) throws IOException, ParseException {
         //从前端接收一个plt文件和用户名
         //获取明文轨迹
-        File file = new File(multipartFile.getOriginalFilename());
+        System.out.println(multipartFile.getName());
+        System.out.println(request.getServletContext().getRealPath(""));
+        String path="E:\\GitHub\\PriTLD\\PriTLD\\temp/" + multipartFile.getOriginalFilename();
+        multipartFile.transferTo(new File("E:\\GitHub\\PriTLD\\PriTLD\\temp/" + multipartFile.getOriginalFilename()));
+        File file = new File(path);
         TrajectoryReader reader=new TrajectoryReader(file);
         Trajectory trajectory = reader.load(userId);
-        file.delete();
+        System.out.println(file.delete());
 
         //安全性考虑，传到session
         request.getSession().setAttribute("tlds"+userId,trajectory);
