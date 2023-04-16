@@ -23,3 +23,5 @@
 hs_err_pid*
 PriTLD/.idea/uiDesigner.xml
 *.plt
+.idea/
+.Data

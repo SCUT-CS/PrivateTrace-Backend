@@ -1,10 +1,11 @@
 package cn.edu.scut.priloc.service.impl;
 
-import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.mapper.BTreePlus;
 import cn.edu.scut.priloc.mapper.Entry;
 import cn.edu.scut.priloc.pojo.BeginEndPath;
+import cn.edu.scut.priloc.pojo.EncTrajectory;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 * 索引树功能的具体实现
 * 索引树代码写在这里（大概
 */
+@Service
 public class EncTrajectoryServiceImpl implements EncTrajectoryService {
 
     private BTreePlus getTree(){

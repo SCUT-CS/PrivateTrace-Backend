@@ -1,6 +1,6 @@
 package cn.edu.scut.priloc.service;
 
-import cn.edu.scut.priloc.pojo.*;
+import cn.edu.scut.priloc.pojo.EncTrajectory;
 
 import java.util.List;
 
