@@ -1,4 +1,2 @@
 server:
   port: 80
-  tomcat:
-    basedir: D:\Develop\apache-tomcat-8.5.84\temp

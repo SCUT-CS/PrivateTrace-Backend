@@ -1,9 +1,14 @@
 package cn.edu.scut.priloc.service.impl;
 
+import Priloc.area.basic.EncryptedCircle;
+import Priloc.data.EncTmLocData;
+import Priloc.protocol.CCircleTree;
 import cn.edu.scut.priloc.mapper.BTreePlus;
 import cn.edu.scut.priloc.mapper.Entry;
 import cn.edu.scut.priloc.pojo.BeginEndPath;
+import cn.edu.scut.priloc.pojo.EncTimeLocationData;
 import cn.edu.scut.priloc.pojo.EncTrajectory;
+import cn.edu.scut.priloc.pojo.Trajectory;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +24,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
 
     private BTreePlus getTree(){
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("PriTLD/DataBase"));
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase"));
             BTreePlus bTreePlus = (BTreePlus) inputStream.readObject();
             return bTreePlus;
         } catch (IOException e) {
@@ -31,7 +36,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     private void storeTree(BTreePlus bTreePlus){
         ObjectOutputStream outputStream = null;
         try {
-            outputStream = new ObjectOutputStream(new FileOutputStream("PriTLD/DataBase"));
+            outputStream = new ObjectOutputStream(new FileOutputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase"));
             outputStream.writeObject(bTreePlus);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -90,5 +95,51 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
             eTldsList.add(getETlds(o.getPath()));
         }
         return eTldsList;
+    }
+
+    @Override
+    public EncTrajectory encrypt(Trajectory trajectory) {
+        EncTrajectory encTrajectory=new EncTrajectory(trajectory);
+        return encTrajectory;
+    }
+
+    @Override
+    public Boolean query(List<EncTrajectory> encTrajectories,EncTrajectory encTrajectory) {
+        List<Priloc.data.EncTrajectory> encCircles = new ArrayList<>();
+        for (EncTrajectory encTrajectory1 : encTrajectories) {
+            Priloc.data.EncTrajectory temp = getEncTrajectory(encTrajectory1);
+            encCircles.add(temp);
+        }
+        // 在EncTrajectory.java中添加了一个构造函数 然后install
+//    public EncTrajectory(List<EncTmLocData> eTLDs) {
+//            this.eTLDs = eTLDs;
+//        }
+        CCircleTree cCircleTree = new CCircleTree();
+        for (int i = 0; i < encCircles.size(); i++) {
+            cCircleTree.add(encCircles.get(i));
+        }
+        try {
+            cCircleTree.init(true);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        boolean result = cCircleTree.compare(getEncTrajectory(encTrajectory));
+        return result;
+    }
+    private static Priloc.data.EncTrajectory getEncTrajectory(EncTrajectory encTrajectory1) {
+        List<EncTimeLocationData> eTlds2 = encTrajectory1.geteTlds();
+        List<EncTmLocData> eTLDs = new ArrayList();
+        EncTmLocData pETLD = null;
+        for (int i = 0; i < eTlds2.size(); ++i) {
+            EncTmLocData cETLD = new EncTmLocData(new EncryptedCircle(eTlds2.get(i).getEncPoint(), 200), eTlds2.get(i).getDate());
+            if (pETLD != null) {
+                pETLD.setNext(cETLD);
+            }
+            cETLD.setPrevious(pETLD);
+            eTLDs.add(cETLD);
+            pETLD = cETLD;
+        }
+        Priloc.data.EncTrajectory temp = new Priloc.data.EncTrajectory(eTLDs);
+        return temp;
     }
 }

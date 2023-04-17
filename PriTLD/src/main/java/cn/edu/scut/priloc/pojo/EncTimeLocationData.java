@@ -4,6 +4,7 @@ import Priloc.area.basic.EncryptedPoint;
 import Priloc.area.basic.Point;
 import Priloc.geo.Location;
 import Priloc.utils.Utils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 public class EncTimeLocationData implements Serializable {
     private EncLocation encLocation;
+    @JsonIgnore
     private EncryptedPoint encPoint;
     private Date date;
 

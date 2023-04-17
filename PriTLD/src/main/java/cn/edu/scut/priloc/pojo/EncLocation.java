@@ -2,13 +2,20 @@ package cn.edu.scut.priloc.pojo;
 
 import Priloc.geo.Location;
 import Priloc.utils.Utils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import sg.smu.securecom.protocol.Paillier;
 
 import java.math.BigInteger;
 
 public class EncLocation {
+    @JsonIgnore
     private BigInteger latitude;
+    @JsonIgnore
     private BigInteger longitude;
+
+    private String lati;
+
+    private String longi;
 
     public EncLocation (Location location){
         this.latitude= Utils.encryptDouble(location.getLatitude(),8);
@@ -25,6 +32,24 @@ public class EncLocation {
     public EncLocation(BigInteger latitude, BigInteger longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.lati=latitude.toString();
+        this.longi=longitude.toString();
+    }
+
+    public String getLati() {
+        return lati;
+    }
+
+    public void setLati(String lati) {
+        this.lati = lati;
+    }
+
+    public String getLongi() {
+        return longi;
+    }
+
+    public void setLongi(String longi) {
+        this.longi = longi;
     }
 
     public BigInteger getLatitude() {

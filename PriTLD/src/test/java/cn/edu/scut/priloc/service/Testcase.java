@@ -1,10 +1,12 @@
 package cn.edu.scut.priloc.service;
 
+import cn.edu.scut.priloc.pojo.EncTrajectory;
 import cn.edu.scut.priloc.pojo.Trajectory;
 import cn.edu.scut.priloc.util.TrajectoryReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.StopWatch;
 
 import java.io.*;
 import java.text.ParseException;
@@ -13,7 +15,6 @@ import java.text.ParseException;
 public class Testcase {
     @Autowired
     EncTrajectoryService etldsService;
-
     @Test
     public void testAdd() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");
@@ -28,5 +29,17 @@ public class Testcase {
         //将轨迹存储到数据库（序列化）
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
         outputStream.writeObject(trajectory);
+    }
+
+    @Test
+    public void testEncrypt() throws FileNotFoundException, ParseException {
+        TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");
+        Trajectory trajectory=reader.load("001");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("test");
+        EncTrajectory encTrajectory = new EncTrajectory(trajectory);
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        System.out.println(encTrajectory);
     }
 }
