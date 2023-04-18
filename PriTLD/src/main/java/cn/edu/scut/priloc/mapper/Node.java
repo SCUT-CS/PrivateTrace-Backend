@@ -1,13 +1,12 @@
 package cn.edu.scut.priloc.mapper;
 
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 
-@Data
+
 public class Node<V> implements Serializable {
     private List<Long> keys;
     private List<Node<V>> children;
@@ -199,8 +198,64 @@ public class Node<V> implements Serializable {
         }
     }
 
+    public List<Long> getKeys() {
+        return keys;
+    }
+
+    public void setKeys(List<Long> keys) {
+        this.keys = keys;
+    }
+
+    public List<Node<V>> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Node<V>> children) {
+        this.children = children;
+    }
+
+    public void setLeaf(boolean leaf) {
+        isLeaf = leaf;
+    }
+
+    public Node<V> getPreviousNode() {
+        return previousNode;
+    }
+
+    public void setPreviousNode(Node<V> previousNode) {
+        this.previousNode = previousNode;
+    }
+
+    public void setNextNode(Node<V> nextNode) {
+        this.nextNode = nextNode;
+    }
+
+    public Node<V> getParentNode() {
+        return parentNode;
+    }
+
+    public void setParentNode(Node<V> parentNode) {
+        this.parentNode = parentNode;
+    }
+
+    public List<Entry<V>> getEntrys() {
+        return entrys;
+    }
+
+    public void setEntrys(List<Entry<V>> entrys) {
+        this.entrys = entrys;
+    }
+
     @Override
     public String toString() {
-        return "";
+        return "Node{" +
+                "keys=" + keys +
+                ", children=" + children +
+                ", isLeaf=" + isLeaf +
+                ", previousNode=" + previousNode +
+                ", nextNode=" + nextNode +
+                ", parentNode=" + parentNode +
+                ", entrys=" + entrys +
+                '}';
     }
 }

@@ -1,7 +1,6 @@
 package cn.edu.scut.priloc.mapper;
 
 import cn.edu.scut.priloc.pojo.BeginEndPath;
-import lombok.Data;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -9,7 +8,6 @@ import java.util.Date;
 import java.util.Scanner;
 
 
-@Data
 public class BepReader {
     private String path;
 
@@ -74,4 +72,36 @@ public class BepReader {
         return btPlus;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public File getPltFile() {
+        return pltFile;
+    }
+
+    public void setPltFile(File pltFile) {
+        this.pltFile = pltFile;
+    }
+
+    public Scanner getSc() {
+        return sc;
+    }
+
+    public void setSc(Scanner sc) {
+        this.sc = sc;
+    }
+
+    @Override
+    public String toString() {
+        return "BepReader{" +
+                "path='" + path + '\'' +
+                ", pltFile=" + pltFile +
+                ", sc=" + sc +
+                '}';
+    }
 }

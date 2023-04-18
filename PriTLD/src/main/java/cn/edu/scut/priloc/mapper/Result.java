@@ -1,13 +1,8 @@
 package cn.edu.scut.priloc.mapper;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
 
-@Data
-@NoArgsConstructor
 public class Result<V> implements Serializable {
 
     private Long key;
@@ -20,5 +15,47 @@ public class Result<V> implements Serializable {
         this.entry = entry;
         this.index = index;
         this.isExit=isExit;
+    }
+
+    public Long getKey() {
+        return key;
+    }
+
+    public void setKey(Long key) {
+        this.key = key;
+    }
+
+    public Entry<V> getEntry() {
+        return entry;
+    }
+
+    public void setEntry(Entry<V> entry) {
+        this.entry = entry;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public boolean isExit() {
+        return isExit;
+    }
+
+    public void setExit(boolean exit) {
+        isExit = exit;
+    }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "key=" + key +
+                ", entry=" + entry +
+                ", index=" + index +
+                ", isExit=" + isExit +
+                '}';
     }
 }

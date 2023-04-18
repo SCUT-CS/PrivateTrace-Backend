@@ -1,11 +1,8 @@
 package cn.edu.scut.priloc.mapper;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
 
-@Data
 public class Entry<V> implements Serializable {
     private Long key;
     private V value;
@@ -27,4 +24,18 @@ public class Entry<V> implements Serializable {
     public Long compareTo(Long o) {
         return this.key - o;
     }
+
+    public Long getKey() {
+        return key;
+    }
+
+    public void setKey(Long key) {
+        this.key = key;
+    }
+
+    public void setValue(V value) {
+        this.value = value;
+    }
+
+
 }

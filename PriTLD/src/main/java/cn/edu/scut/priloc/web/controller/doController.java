@@ -55,9 +55,7 @@ public class doController {
         stopWatch.start("加密");
         EncTrajectory encTrajectory = etldsService.encrypt(trajectory);
         stopWatch.stop();
-        stopWatch.start("传session");
         session.setAttribute("etlds"+userId,encTrajectory);
-        stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
         //加密完成后删除明文轨迹
         //请求转发到密文预览

@@ -1,12 +1,10 @@
 package cn.edu.scut.priloc.mapper;
 
 import cn.edu.scut.priloc.pojo.BeginEndPath;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.*;
 
-@Data
 public class BTreePlus<V> implements Serializable {
     //最大存储数 阶数 m
     private int m;
@@ -318,4 +316,59 @@ public class BTreePlus<V> implements Serializable {
         }
     }
 
+    public int getM() {
+        return m;
+    }
+
+    public void setM(int m) {
+        this.m = m;
+    }
+
+    public Node<V> getHead() {
+        return head;
+    }
+
+    public void setHead(Node<V> head) {
+        this.head = head;
+    }
+
+    public void setRoot(Node<V> root) {
+        this.root = root;
+    }
+
+    public int getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    public int getMinSize() {
+        return minSize;
+    }
+
+    public void setMinSize(int minSize) {
+        this.minSize = minSize;
+    }
+
+    public Long getMaxTimeLength() {
+        return maxTimeLength;
+    }
+
+    public void setMaxTimeLength(Long maxTimeLength) {
+        this.maxTimeLength = maxTimeLength;
+    }
+
+    @Override
+    public String toString() {
+        return "BTreePlus{" +
+                "m=" + m +
+                ", head=" + head +
+                ", root=" + root +
+                ", maxSize=" + maxSize +
+                ", minSize=" + minSize +
+                ", maxTimeLength=" + maxTimeLength +
+                '}';
+    }
 }

@@ -12,7 +12,7 @@ import java.io.*;
 import java.text.ParseException;
 
 @SpringBootTest
-public class Testcase {
+public class TestCase {
     @Autowired
     EncTrajectoryService etldsService;
     @Test
@@ -40,6 +40,5 @@ public class Testcase {
         EncTrajectory encTrajectory = new EncTrajectory(trajectory);
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
-        System.out.println(encTrajectory);
     }
 }
