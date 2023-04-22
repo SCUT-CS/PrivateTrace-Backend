@@ -46,7 +46,7 @@ public class doController {
     @GetMapping("/encrypt/{userId}")
     public EncTrajectory encrypt(
             HttpServletRequest request,
-            @PathVariable String userId){
+            @PathVariable String userId) throws IOException {
         System.out.println("encrypt");
         HttpSession session = request.getSession();
         Trajectory trajectory = (Trajectory) session.getAttribute("tlds" + userId);

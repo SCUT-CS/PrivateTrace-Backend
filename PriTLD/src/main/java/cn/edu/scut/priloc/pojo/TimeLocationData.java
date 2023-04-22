@@ -12,6 +12,8 @@ public class TimeLocationData implements Serializable {
     public EncTimeLocationData encrypt(){
         return new EncTimeLocationData(this);
     }
+
+    public  TimeLocationData(){}
     public TimeLocationData(Location location, Date date) {
         this.location = location;
         this.date = date;

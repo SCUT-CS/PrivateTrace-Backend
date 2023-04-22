@@ -2,7 +2,6 @@ package Priloc.geo;
 
 import Priloc.area.basic.EncryptedPoint;
 import Priloc.utils.Turple;
-import sg.smu.securecom.keys.PaillierKey;
 
 import java.io.Serializable;
 
@@ -10,6 +9,8 @@ public class Location implements Serializable {
     private double latitude;
     private double longitude;
     private double altitude = 0.0;
+
+    public Location(){}
 
     public Location(double latitude, double longitude, double altitude) {
         this(latitude, longitude);
@@ -27,6 +28,22 @@ public class Location implements Serializable {
 
     public double getLongitude() {
         return longitude;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
     }
 
     @Override

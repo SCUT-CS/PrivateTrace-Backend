@@ -11,14 +11,21 @@ public class EncTrajectory implements Serializable {
     private String userId;
     private String path;
 
+    public EncTrajectory(){}
     public EncTrajectory(Trajectory trajectory) {
         this.userId=trajectory.getUserId();
         this.path = trajectory.getPath();
-        List<TimeLocationData> tlds = trajectory.getTlds();
+        this.eTlds=new ArrayList<>();
+        /*List<TimeLocationData> tlds = trajectory.getTlds();
         this.eTlds = new ArrayList<>();
+        StopWatch stopWatch = new StopWatch();
+        int i=0;
         for (TimeLocationData tld : tlds) {
+            stopWatch.start("第"+i+"次加密");
             eTlds.add(tld.encrypt());
+            stopWatch.stop();
         }
+        System.out.println(stopWatch.prettyPrint());*/
     }
     public List<EncTimeLocationData> geteTlds() {
         return eTlds;

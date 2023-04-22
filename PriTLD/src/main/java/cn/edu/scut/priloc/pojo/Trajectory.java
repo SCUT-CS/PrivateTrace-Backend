@@ -9,6 +9,7 @@ public class Trajectory implements Serializable {
     private String userId;
     private String path;
 
+    public Trajectory(){}
     public Trajectory(List<TimeLocationData> tlds, String path ,String userId) {
         this.tlds = tlds;
         this.path = path;

@@ -5,22 +5,31 @@ import Priloc.data.EncTmLocData;
 import Priloc.protocol.CCircleTree;
 import cn.edu.scut.priloc.mapper.BTreePlus;
 import cn.edu.scut.priloc.mapper.Entry;
-import cn.edu.scut.priloc.pojo.BeginEndPath;
-import cn.edu.scut.priloc.pojo.EncTimeLocationData;
-import cn.edu.scut.priloc.pojo.EncTrajectory;
-import cn.edu.scut.priloc.pojo.Trajectory;
+import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
+import cn.edu.scut.priloc.util.SpringUtils;
+import org.apache.commons.math3.util.FastMath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 /*
 * 索引树功能的具体实现
 * 索引树代码写在这里（大概
 */
 @Service
 public class EncTrajectoryServiceImpl implements EncTrajectoryService {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     private BTreePlus getTree(){
         try {
@@ -98,9 +107,38 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     }
 
     @Override
-    public EncTrajectory encrypt(Trajectory trajectory) {
-        EncTrajectory encTrajectory=new EncTrajectory(trajectory);
+    public EncTrajectory encrypt(Trajectory trajectory){
+        EncTrajectoryService serviceProxy = SpringUtils.getBean(EncTrajectoryService.class);
+        List<TimeLocationData> tlds = trajectory.getTlds();
+        List<Future<ArrayList<EncTimeLocationData>>> futures = new ArrayList<>();
+        int size=tlds.size();
+        int step=size/5+1;
+        for(int i=0,j=0; i< size; i+=step,j++){
+            futures.add(serviceProxy.doEncrypt(tlds, i, FastMath.min(i + step, size)));
+        }
+        List<EncTimeLocationData> eTlds = new ArrayList<>();
+        for (Future<ArrayList<EncTimeLocationData>> future : futures) {
+            try {
+                eTlds.addAll(future.get());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        EncTrajectory encTrajectory = new EncTrajectory(trajectory);
+        encTrajectory.seteTlds(eTlds);
         return encTrajectory;
+    }
+
+    @Async("taskExecutor")
+    public Future<ArrayList<EncTimeLocationData>> doEncrypt(List<TimeLocationData> tlds, int begin, int end) {
+        logger.info("异步线程启动，between"+begin+" and "+end);
+        ArrayList<EncTimeLocationData> eTlds=new ArrayList<>();
+        for (int i = begin; i < end; i++) {
+            eTlds.add(tlds.get(i).encrypt());
+        }
+        return new AsyncResult<>(eTlds);
     }
 
     @Override
