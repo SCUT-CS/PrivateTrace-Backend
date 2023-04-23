@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class BeginEndPath implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private Long beginTime;
 
     private Long endTime;
