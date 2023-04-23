@@ -9,7 +9,7 @@ import java.util.List;
 public class EncTrajectory implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 5509957259444506847L;
+    private static final long serialVersionUID = 1L;
     private List<EncTimeLocationData> eTlds;
 
     private String userId;

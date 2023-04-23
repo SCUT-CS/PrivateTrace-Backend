@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.*;
 
 public class BTreePlus<V> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     //最大存储数 阶数 m
     private int m;
     //头节点
