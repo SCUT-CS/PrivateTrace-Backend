@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Controller;
 
 import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.io.File;
@@ -31,6 +32,10 @@ public class createDataBase {
         Entry<BeginEndPath> entryNode;
         for(int i = 0; i < files.length; i++){
             String id = files[i].getName();
+            File userFile = new File("C:\\Users\\18124\\Desktop\\DataBase\\" + id);
+            if(!userFile.exists()){
+                userFile.mkdir();
+            }
             File trajectory = files[i].listFiles()[0];
             File[] trajectories = trajectory.listFiles();
             int l = trajectories.length;
@@ -42,9 +47,12 @@ public class createDataBase {
                 String fileName = trajectories[j].getName();
                 fileName = fileName.substring(0, fileName.length() - 4);
                 String path = "C:\\Users\\18124\\Desktop\\DataBase\\" + id + "\\" + fileName + ".txt";
-                encTrajectory.setPath(path);
                 File newFile = new File(path);
-                ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
+                if(!newFile.exists()){
+                    newFile.createNewFile();
+                }
+                encTrajectory.setPath(path);
+                ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(newFile));
                 outputStream.writeObject(encTrajectory);
                 BeginEndPath beginEndPath = new BeginEndPath(encTrajectory);
                 String abstractPath = "DataBase\\" + id + "\\" + fileName + ".txt";
