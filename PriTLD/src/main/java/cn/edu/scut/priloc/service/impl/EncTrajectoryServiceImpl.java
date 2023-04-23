@@ -8,6 +8,7 @@ import cn.edu.scut.priloc.mapper.Entry;
 import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.util.SpringUtils;
+import cn.edu.scut.priloc.util.TreeUtils;
 import org.apache.commons.math3.util.FastMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,40 +30,6 @@ import java.util.concurrent.Future;
 public class EncTrajectoryServiceImpl implements EncTrajectoryService {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
-    private BTreePlus getTree(){
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase"));
-            BTreePlus bTreePlus = (BTreePlus) inputStream.readObject();
-            return bTreePlus;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private void storeTree(BTreePlus bTreePlus){
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase"));
-            outputStream.writeObject(bTreePlus);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private EncTrajectory getETlds(String path){
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
-            EncTrajectory encTrajectory = (EncTrajectory) inputStream.readObject();
-            return encTrajectory;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public List<EncTrajectory> selectByPage(int currentPage, int pageSize) {
@@ -87,21 +54,21 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         //添加到索引树上 调用service方法
         BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
         Entry<BeginEndPath> entry=new Entry<>(beginEndPath.getBeginTime(), beginEndPath);
-        BTreePlus bTreePlus=getTree();
+        BTreePlus bTreePlus=TreeUtils.getTree();
         bTreePlus.addEntry(entry);
         //序列化新的树
-        storeTree(bTreePlus);
+        TreeUtils.storeTree(bTreePlus);
     }
 
     @Override
     public List<EncTrajectory> selectByETLDs(EncTrajectory encTrajectory) {
         BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
-        BTreePlus bTreePlus=getTree();
+        BTreePlus bTreePlus= TreeUtils.getTree();
         ArrayList<BeginEndPath> list = bTreePlus.find(beginEndPath);
         List<EncTrajectory> eTldsList=new ArrayList<>();
         for (BeginEndPath o : list) {
             //读入磁盘位置中的加密轨迹
-            eTldsList.add(getETlds(o.getPath()));
+            eTldsList.add(TreeUtils.getETlds(o.getPath()));
         }
         return eTldsList;
     }
@@ -153,8 +120,8 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
 //            this.eTLDs = eTLDs;
 //        }
         CCircleTree cCircleTree = new CCircleTree();
-        for (int i = 0; i < encCircles.size(); i++) {
-            cCircleTree.add(encCircles.get(i));
+        for (Priloc.data.EncTrajectory encCircle : encCircles) {
+            cCircleTree.add(encCircle);
         }
         try {
             cCircleTree.init(true);

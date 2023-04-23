@@ -5,9 +5,10 @@ import Priloc.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import sg.smu.securecom.protocol.Paillier;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class EncLocation {
+public class EncLocation implements Serializable {
     @JsonIgnore
     private BigInteger latitude;
     @JsonIgnore

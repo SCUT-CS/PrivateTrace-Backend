@@ -1,11 +1,15 @@
 package cn.edu.scut.priloc.pojo;
 
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EncTrajectory implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5509957259444506847L;
     private List<EncTimeLocationData> eTlds;
 
     private String userId;

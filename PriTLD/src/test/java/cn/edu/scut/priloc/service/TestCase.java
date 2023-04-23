@@ -1,5 +1,6 @@
 package cn.edu.scut.priloc.service;
 
+import cn.edu.scut.priloc.pojo.EncTimeLocationData;
 import cn.edu.scut.priloc.pojo.EncTrajectory;
 import cn.edu.scut.priloc.pojo.Trajectory;
 import cn.edu.scut.priloc.util.TrajectoryReader;
@@ -32,13 +33,24 @@ public class TestCase {
     }
 
     @Test
-    public void testEncrypt() throws FileNotFoundException, ParseException {
+    public void testEncrypt() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");
         Trajectory trajectory=reader.load("001");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("test");
-        EncTrajectory encTrajectory = new EncTrajectory(trajectory);
+        EncTrajectory encTrajectory = etldsService.encrypt(trajectory);
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
+        for (EncTimeLocationData etld : encTrajectory.geteTlds()) {
+            System.out.println(etld.getDate());
+        }
+    }
+
+    @Test
+    public void testTree() throws IOException, ParseException, ClassNotFoundException {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\用户\\文档\\华工\\数据结构\\DataBase\\000\\20081023234104.txt"));
+        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
+        etldsService.selectByETLDs(eTdls);
+
     }
 }
