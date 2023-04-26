@@ -4,5 +4,8 @@
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="priloc" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
