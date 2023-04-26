@@ -48,8 +48,9 @@ public class TestCase {
 
     @Test
     public void testTree() throws IOException, ParseException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\用户\\文档\\华工\\数据结构\\DataBase\\000\\20081023234104.txt"));
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\18124\\Desktop\\DataBase\\000\\20081023234104.txt"));
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
+        eTdls.setUserId("000");
         etldsService.selectByETLDs(eTdls);
 
     }

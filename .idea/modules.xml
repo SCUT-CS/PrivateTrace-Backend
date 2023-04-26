@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PEGA-PLOC/PriLoc.iml" filepath="$PROJECT_DIR$/PEGA-PLOC/PriLoc.iml" />
       <module fileurl="file://$PROJECT_DIR$/PriTLD/PriTLD.iml" filepath="$PROJECT_DIR$/PriTLD/PriTLD.iml" />
     </modules>
   </component>
