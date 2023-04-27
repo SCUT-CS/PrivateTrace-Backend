@@ -1,9 +1,6 @@
 package cn.edu.scut.priloc.service;
 
-import cn.edu.scut.priloc.pojo.EncTimeLocationData;
-import cn.edu.scut.priloc.pojo.EncTrajectory;
-import cn.edu.scut.priloc.pojo.TimeLocationData;
-import cn.edu.scut.priloc.pojo.Trajectory;
+import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.util.TrajectoryReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +58,12 @@ public class TestCase {
 
     @Test
     public void testTree() throws IOException, ParseException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\18124\\Desktop\\DataBase\\000\\20081023234104.txt"));
+        //TODO
+        //测试树的建立，路径需要修改
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\18124\\Desktop\\DataBase\\001\\20081205002359.txt"));
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
         eTdls.setUserId("000");
         etldsService.selectByETLDs(eTdls);
+        System.out.println(eTdls.geteTlds());
     }
 }

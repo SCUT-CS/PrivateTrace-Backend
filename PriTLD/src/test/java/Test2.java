@@ -19,7 +19,6 @@ public class Test2 {
 
         //用用户id和时间作为文件名
         String path="PriTLD/DataBase/"+trajectory.getUserId()+"/"+System.currentTimeMillis();
-        trajectory.setPath(path);
         //将轨迹存储到数据库（反序列化）
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
         outputStream.writeObject(trajectory);

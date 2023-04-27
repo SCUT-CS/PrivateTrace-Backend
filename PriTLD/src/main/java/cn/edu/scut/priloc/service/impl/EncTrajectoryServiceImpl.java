@@ -68,7 +68,8 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         System.out.println(list);
         for (BeginEndPath o : list) {
             //读入磁盘位置中的加密轨迹
-            eTldsList.add(TreeUtils.getETlds(o.getPath()));
+            //TODO:这里的路径需要修改为相对路径
+            eTldsList.add(TreeUtils.getETlds("C:\\Users\\18124\\Desktop\\"+o.getPath()));
         }
         return eTldsList;
     }

@@ -42,7 +42,6 @@ public class BTreePlus<V> implements Serializable {
     public ArrayList<V> find(BeginEndPath bep){
         ArrayList<V> resultOfFind = new ArrayList<>();
         Long beginFlag = bep.getBeginTime() - this.getMaxTimeLength();
-        System.out.println("开始遍历的beginTime：" + beginFlag);
         Node<V> rootOfFind = this.getRoot();
         boolean flag = false;//若beginFlag超出树的存储范围，flag置1
         while(!rootOfFind.isLeaf()){
