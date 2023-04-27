@@ -8,37 +8,55 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class TrajectoryReader {
 
-    private String path;
-    private Scanner scanner;
+    private static String[] dateStrings;
+
+    SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    static {
+        dateStrings = new String[]{//把轨迹限定在两天以内
+                "2008-10-24 ",
+                "2008-10-25 "};
+    }
+
+    private final Scanner scanner;
     public TrajectoryReader (File file) throws FileNotFoundException {
-        this.path=file.getPath();
         scanner=new Scanner(file);
         for (int i = 0; i < 6; i++) {
             scanner.nextLine();
         }
     }
     public TrajectoryReader(String path) throws FileNotFoundException {
-        this.path=path;
         this.scanner=new TrajectoryReader(new File(path)).getScanner();
     }
+
     public Trajectory load(String userId) throws ParseException {
+        String lastDate=null;
+        boolean flag = false;//是否跨过一天的标志
         List<TimeLocationData> tlds = new ArrayList<>();
         while(scanner.hasNext()){
             String[] tokens = scanner.next().split(",");
             String dateString = tokens[5]+" "+tokens[6];
-            SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = dateFormat.parse(dateString);
+            //判断是否跨过一天
+            if(lastDate!=null&&!tokens[5].equals(lastDate)) flag = true;//跨过一天
+            lastDate=tokens[5];
             Location location = new Location(Double.parseDouble(tokens[0]),Double.parseDouble(tokens[1]));
-            tlds.add(new TimeLocationData(location,date));
+            tlds.add(new TimeLocationData(location,dateFormat.parse(dateString)));
         }
+        System.out.println(flag);
         scanner.close();
+        Random random= new Random();
+        String dateString;
+        if (!flag)//没有跨一天，则随机选择一天
+            dateString= dateStrings[random.nextInt(2)];
+        else dateString=dateStrings[0];
+        for (TimeLocationData tld : tlds) {
+            String timeString = dateFormat.format(tld.getDate()).split(" ")[1];//获取时间字符串
+            tld.setDate(dateFormat.parse(dateString+timeString));
+        }
         return new Trajectory(tlds,null,userId);
     }
 
