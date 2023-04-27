@@ -8,6 +8,7 @@ import java.util.List;
 
 
 public class Node<V> implements Serializable {
+    private static final long serialVersionUID = 1L;
     private List<Long> keys;
     private List<Node<V>> children;
     private boolean isLeaf;
@@ -246,16 +247,16 @@ public class Node<V> implements Serializable {
         this.entrys = entrys;
     }
 
-    @Override
-    public String toString() {
-        return "Node{" +
-                "keys=" + keys +
-                ", children=" + children +
-                ", isLeaf=" + isLeaf +
-                ", previousNode=" + previousNode +
-                ", nextNode=" + nextNode +
-                ", parentNode=" + parentNode +
-                ", entrys=" + entrys +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Node{" +
+//                "keys=" + keys +
+//                ", children=" + children +
+//                ", isLeaf=" + isLeaf +
+//                ", previousNode=" + previousNode +
+//                ", nextNode=" + nextNode +
+//                ", parentNode=" + parentNode +
+//                ", entrys=" + entrys +
+//                '}';
+//    }
 }

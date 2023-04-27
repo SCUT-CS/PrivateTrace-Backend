@@ -1,15 +1,16 @@
 package cn.edu.scut.priloc.util;
 
 import cn.edu.scut.priloc.mapper.BTreePlus;
+import cn.edu.scut.priloc.pojo.BeginEndPath;
 import cn.edu.scut.priloc.pojo.EncTrajectory;
 
 import java.io.*;
 
 public class TreeUtils {
-    public static BTreePlus getTree(){
+    public static BTreePlus<BeginEndPath> getTree(){
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase"));
-            BTreePlus bTreePlus = (BTreePlus) inputStream.readObject();
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\18124\\Desktop\\DataBase\\tree.txt"));
+            BTreePlus<BeginEndPath> bTreePlus = (BTreePlus<BeginEndPath>) inputStream.readObject();
             return bTreePlus;
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -73,7 +73,7 @@ public class BTreePlus<V> implements Serializable {
                     if(rootOfFind.keyAt(i) >= beginFlag &&
                             ((BeginEndPath)rootOfFind.entryAt(i).getValue()).getEndTime() > bep.getBeginTime()
                             && rootOfFind.keyAt(i) < bep.getEndTime()
-                            && ((BeginEndPath)rootOfFind.entryAt(i).getValue()).getUserId() != bep.getUserId()
+                            && !Objects.equals(((BeginEndPath) rootOfFind.entryAt(i).getValue()).getUserId(), bep.getUserId())
                     )
                     {
 //                        System.out.println(rootOfFind.entryAt(i));

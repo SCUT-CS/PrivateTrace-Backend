@@ -66,6 +66,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         BTreePlus bTreePlus= TreeUtils.getTree();
         ArrayList<BeginEndPath> list = bTreePlus.find(beginEndPath);
         List<EncTrajectory> eTldsList=new ArrayList<>();
+        System.out.println(list);
         for (BeginEndPath o : list) {
             //读入磁盘位置中的加密轨迹
             eTldsList.add(TreeUtils.getETlds(o.getPath()));
@@ -95,6 +96,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         }
         EncTrajectory encTrajectory = new EncTrajectory(trajectory);
         encTrajectory.seteTlds(eTlds);
+        encTrajectory.setUserId(trajectory.getUserId());
         return encTrajectory;
     }
 

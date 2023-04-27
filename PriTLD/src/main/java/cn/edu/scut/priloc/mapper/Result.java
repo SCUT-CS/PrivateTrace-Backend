@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class Result<V> implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private Long key;
     private Entry<V> entry;
     private int index;

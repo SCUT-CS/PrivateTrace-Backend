@@ -28,6 +28,7 @@ public class BeginEndPath implements Serializable {
         this.beginTime = encTrajectory.geteTlds().get(0).getDate().getTime();
         this.endTime = encTrajectory.geteTlds().get(encTrajectory.geteTlds().size() - 1).getDate().getTime();
         this.totalTime = this.endTime - this.beginTime;
+        this.userId = encTrajectory.getUserId();
     }
 
     public BeginEndPath(Long beginTime, Long endTime, String path) {
