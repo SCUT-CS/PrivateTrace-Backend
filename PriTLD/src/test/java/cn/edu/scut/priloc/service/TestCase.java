@@ -33,6 +33,19 @@ public class TestCase {
     }
 
     @Test
+    public void testSetDate() throws FileNotFoundException, ParseException {
+        File file = new File("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory");
+        File[] files = file.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            System.out.println("第"+i+"个文件");
+            TrajectoryReader reader=new TrajectoryReader(files[i]);
+            Trajectory trajectory=reader.load("001");
+            System.out.println(trajectory.getTlds().get(0).getDate());
+        }
+
+    }
+
+    @Test
     public void testEncrypt() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");
         Trajectory trajectory=reader.load("001");
