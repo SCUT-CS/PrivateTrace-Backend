@@ -42,11 +42,10 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         //创建以该用户id命名的目录,文件名为当前时间
         File file = new File(path+"001");
         file.mkdir();
-        encTrajectory.setPath(path+"/"+System.currentTimeMillis());
-        //将轨迹存储到数据库（反序列化）
+        //将轨迹存储到数据库（序列化）
         ObjectOutputStream outputStream = null;
         try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(encTrajectory.getPath()));
+            outputStream = new ObjectOutputStream(new FileOutputStream(""));
             outputStream.writeObject(encTrajectory);
         } catch (IOException e) {
             throw new RuntimeException(e);

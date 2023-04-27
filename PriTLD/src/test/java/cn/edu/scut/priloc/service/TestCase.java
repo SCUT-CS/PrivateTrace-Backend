@@ -2,6 +2,7 @@ package cn.edu.scut.priloc.service;
 
 import cn.edu.scut.priloc.pojo.EncTimeLocationData;
 import cn.edu.scut.priloc.pojo.EncTrajectory;
+import cn.edu.scut.priloc.pojo.TimeLocationData;
 import cn.edu.scut.priloc.pojo.Trajectory;
 import cn.edu.scut.priloc.util.TrajectoryReader;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,6 @@ public class TestCase {
 
         //用用户id和时间作为文件名
         String path="DataBase/"+trajectory.getUserId()+"/"+System.currentTimeMillis()+".txt";
-        trajectory.setPath(path);
         //将轨迹存储到数据库（序列化）
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
         outputStream.writeObject(trajectory);
@@ -34,7 +34,7 @@ public class TestCase {
 
     @Test
     public void testSetDate() throws FileNotFoundException, ParseException {
-        File file = new File("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory");
+        File file = new File("C:\\Users\\18124\\Desktop\\Data\\000\\Trajectory");
         File[] files = file.listFiles();
         for (int i = 0; i < files.length; i++) {
             System.out.println("第"+i+"个文件");
@@ -65,6 +65,5 @@ public class TestCase {
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
         eTdls.setUserId("000");
         etldsService.selectByETLDs(eTdls);
-
     }
 }

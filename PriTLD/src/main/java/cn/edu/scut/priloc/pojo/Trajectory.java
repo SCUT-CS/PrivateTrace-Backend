@@ -7,12 +7,11 @@ public class Trajectory implements Serializable {
     private List<TimeLocationData> tlds;
 
     private String userId;
-    private String path;
+
 
     public Trajectory(){}
-    public Trajectory(List<TimeLocationData> tlds, String path ,String userId) {
+    public Trajectory(List<TimeLocationData> tlds ,String userId) {
         this.tlds = tlds;
-        this.path = path;
         this.userId = userId;
     }
 
@@ -24,13 +23,6 @@ public class Trajectory implements Serializable {
         this.tlds = tlds;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 
     public String getUserId() {
         return userId;
@@ -45,7 +37,6 @@ public class Trajectory implements Serializable {
         return "Trajectory{" +
                 "tlds=" + tlds +
                 ", userId='" + userId + '\'' +
-                ", path='" + path + '\'' +
                 '}';
     }
 }

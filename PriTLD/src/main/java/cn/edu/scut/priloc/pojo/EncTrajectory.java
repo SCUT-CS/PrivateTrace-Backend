@@ -13,12 +13,11 @@ public class EncTrajectory implements Serializable {
     private List<EncTimeLocationData> eTlds;
 
     private String userId;
-    private String path;
+
 
     public EncTrajectory(){}
     public EncTrajectory(Trajectory trajectory) {
         this.userId=trajectory.getUserId();
-        this.path = trajectory.getPath();
         this.eTlds=new ArrayList<>();
         /*List<TimeLocationData> tlds = trajectory.getTlds();
         this.eTlds = new ArrayList<>();
@@ -39,13 +38,6 @@ public class EncTrajectory implements Serializable {
         this.eTlds = eTlds;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 
     public String getUserId() {
         return userId;
@@ -60,7 +52,6 @@ public class EncTrajectory implements Serializable {
         return "EncTrajectory{" +
                 "eTlds=" + eTlds +
                 ", userId='" + userId + '\'' +
-                ", path='" + path + '\'' +
                 '}';
     }
 }

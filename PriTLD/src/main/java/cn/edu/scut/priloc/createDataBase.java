@@ -51,7 +51,7 @@ public class createDataBase {
                 if(!newFile.exists()){
                     newFile.createNewFile();
                 }
-                encTrajectory.setPath(path);
+                //encTrajectory.setPath(path);
                 ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(newFile));
                 outputStream.writeObject(encTrajectory);
                 BeginEndPath beginEndPath = new BeginEndPath(encTrajectory);
