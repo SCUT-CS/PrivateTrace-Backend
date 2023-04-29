@@ -1,9 +1,6 @@
 package cn.edu.scut.priloc.service;
 
-import cn.edu.scut.priloc.pojo.EncTimeLocationData;
-import cn.edu.scut.priloc.pojo.EncTrajectory;
-import cn.edu.scut.priloc.pojo.TimeLocationData;
-import cn.edu.scut.priloc.pojo.Trajectory;
+import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.util.TrajectoryReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +80,6 @@ public class TestCase {
         if(etldsService.query(encTrajectories,eTdls)){
             //etldsService.add(eTdls);
         }
+
     }
 }
