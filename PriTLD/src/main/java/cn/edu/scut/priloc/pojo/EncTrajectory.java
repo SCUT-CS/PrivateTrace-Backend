@@ -3,7 +3,6 @@ package cn.edu.scut.priloc.pojo;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EncTrajectory implements Serializable {
@@ -16,20 +15,12 @@ public class EncTrajectory implements Serializable {
 
 
     public EncTrajectory(){}
-    public EncTrajectory(Trajectory trajectory) {
-        this.userId=trajectory.getUserId();
-        this.eTlds=new ArrayList<>();
-        /*List<TimeLocationData> tlds = trajectory.getTlds();
-        this.eTlds = new ArrayList<>();
-        StopWatch stopWatch = new StopWatch();
-        int i=0;
-        for (TimeLocationData tld : tlds) {
-            stopWatch.start("第"+i+"次加密");
-            eTlds.add(tld.encrypt());
-            stopWatch.stop();
-        }
-        System.out.println(stopWatch.prettyPrint());*/
+
+    public EncTrajectory(List<EncTimeLocationData> eTlds, String userId) {
+        this.eTlds = eTlds;
+        this.userId = userId;
     }
+
     public List<EncTimeLocationData> geteTlds() {
         return eTlds;
     }

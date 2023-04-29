@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 public class EncTimeLocationData implements Serializable {
+    private static final long serialVersionUID =-48231748532854370L;
     private EncLocation encLocation;
     @JsonIgnore
     private EncryptedPoint encPoint;

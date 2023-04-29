@@ -7,6 +7,7 @@ import java.util.Date;
 public class Utils {
 
     public  static BigInteger decryptBigInteger(BigInteger i) {
+        User.pai.setDecryption(User.prikey);
         return User.pai.decrypt(i);
     }
 

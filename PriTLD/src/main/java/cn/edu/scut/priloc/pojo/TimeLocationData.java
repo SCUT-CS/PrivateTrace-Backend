@@ -25,7 +25,7 @@ public class TimeLocationData implements Serializable {
         BigInteger encLongi = encLocation.getLongitude();
         BigInteger latitude= Utils.decryptBigInteger(encLati);
         BigInteger longitude= Utils.decryptBigInteger(encLongi);
-        this.location = new Location(latitude.doubleValue(),longitude.doubleValue());
+        this.location = new Location(latitude.doubleValue()/1e8,longitude.doubleValue()/1e8);
     }
     public TimeLocationData(Location location, Date date) {
         this.location = location;

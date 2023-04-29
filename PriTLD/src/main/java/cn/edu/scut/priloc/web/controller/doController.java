@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ import java.util.List;
 public class doController {
 
     @Autowired
-    private EncTrajectoryService etldsService;
+    private EncTrajectoryService eTldsService;
     @GetMapping("/upload/{userId}")
     public Trajectory upload(
             @RequestBody MultipartFile multipartFile,
@@ -53,25 +54,27 @@ public class doController {
         //加密
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("加密");
-        EncTrajectory encTrajectory = etldsService.encrypt(trajectory);
+        EncTrajectory encTrajectory = eTldsService.encrypt(trajectory);
         stopWatch.stop();
         session.setAttribute("etlds"+userId,encTrajectory);
         System.out.println(stopWatch.prettyPrint());
         //加密完成后删除明文轨迹
-        //请求转发到密文预览
         return encTrajectory;
     }
     @RequestMapping("/query/{userId}")
-    public Boolean query(
+    public List<Trajectory> query(
             HttpServletRequest request,
             @PathVariable String userId) {
         EncTrajectory encTrajectory = (EncTrajectory) request.getSession().getAttribute("etlds" + userId);
-        List<EncTrajectory> encTrajectories = etldsService.selectByETLDs(encTrajectory);
-        Boolean flag=etldsService.query(encTrajectories,encTrajectory);
-        if(flag){
-            etldsService.add(encTrajectory);
+        List<EncTrajectory> encTrajectories = eTldsService.selectByETLDs(encTrajectory);
+        List<Trajectory> trajectoryList = new ArrayList<>();
+        if(!eTldsService.query(encTrajectories,encTrajectory)){//如果判断交错，
+            //eTldsService.add(encTrajectory);//添加到阳性库
+            for (EncTrajectory eTld : encTrajectories) {//解密后发回前端
+                trajectoryList.add(eTldsService.decrypt(eTld));
+            }
         }
-        return flag;
+        return trajectoryList;//如果为空，说明没有交集
     }
 
 
