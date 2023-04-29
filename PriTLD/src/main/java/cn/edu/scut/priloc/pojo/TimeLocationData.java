@@ -1,8 +1,10 @@
 package cn.edu.scut.priloc.pojo;
 
 import Priloc.geo.Location;
+import Priloc.utils.Utils;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 public class TimeLocationData implements Serializable {
@@ -14,6 +16,17 @@ public class TimeLocationData implements Serializable {
     }
 
     public  TimeLocationData(){}
+
+    public TimeLocationData(EncTimeLocationData eTld){
+        this.date = eTld.getDate();
+        //对地址进行解密
+        EncLocation encLocation = eTld.getEncLocation();
+        BigInteger encLati = encLocation.getLatitude();
+        BigInteger encLongi = encLocation.getLongitude();
+        BigInteger latitude= Utils.decryptBigInteger(encLati);
+        BigInteger longitude= Utils.decryptBigInteger(encLongi);
+        this.location = new Location(latitude.doubleValue(),longitude.doubleValue());
+    }
     public TimeLocationData(Location location, Date date) {
         this.location = location;
         this.date = date;

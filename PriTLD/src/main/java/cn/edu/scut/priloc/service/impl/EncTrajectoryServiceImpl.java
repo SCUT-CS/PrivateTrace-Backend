@@ -99,6 +99,18 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         return encTrajectory;
     }
 
+    @Override
+    public Trajectory decrypt(EncTrajectory encTrajectory) {
+        List<EncTimeLocationData> eTlds = encTrajectory.geteTlds();
+        List<TimeLocationData> tlds = new ArrayList<>();
+        for (EncTimeLocationData eTld : eTlds) {
+            tlds.add(eTld.decrypt());
+        }
+        Trajectory trajectory = new Trajectory(tlds, encTrajectory.getUserId());
+        return trajectory;
+    }
+
+
     @Async("taskExecutor")
     public Future<ArrayList<EncTimeLocationData>> doEncrypt(List<TimeLocationData> tlds, int begin, int end) {
         logger.info("异步线程启动，between"+begin+" and "+end);

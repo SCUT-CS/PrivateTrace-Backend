@@ -19,6 +19,8 @@ public interface EncTrajectoryService {
 
     EncTrajectory encrypt(Trajectory trajectory) throws IOException;
 
+    Trajectory decrypt(EncTrajectory encTrajectory);
+
     Boolean query(List<EncTrajectory> encTrajectories,EncTrajectory encTrajectory);
 
     Future<ArrayList<EncTimeLocationData>> doEncrypt(List<TimeLocationData> tlds, int i, int min);

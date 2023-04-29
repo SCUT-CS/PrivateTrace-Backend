@@ -23,11 +23,15 @@ public class EncTimeLocationData implements Serializable {
         Location location = tld.getLocation();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        BigInteger encLati= Utils.encryptDouble(latitude,8);
-        BigInteger encLongi= Utils.encryptDouble(longitude,8);
+        BigInteger encLati= Utils.encryptDouble(latitude);
+        BigInteger encLongi= Utils.encryptDouble(longitude);
         this.encLocation = new EncLocation(encLati,encLongi);
         //生成xyz
         this.encPoint = new EncryptedPoint(new Point(location));
+    }
+
+    public TimeLocationData decrypt(){
+        return new TimeLocationData(this);
     }
 
     public EncLocation getEncLocation() {

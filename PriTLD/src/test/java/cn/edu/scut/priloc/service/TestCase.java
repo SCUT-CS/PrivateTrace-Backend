@@ -12,6 +12,7 @@ import org.springframework.util.StopWatch;
 
 import java.io.*;
 import java.text.ParseException;
+import java.util.List;
 
 @SpringBootTest
 public class TestCase {
@@ -58,12 +59,29 @@ public class TestCase {
             System.out.println(etld.getDate());
         }
     }
+    @Test
+    public void testDecrypt() throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
+        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
+        eTdls.setUserId("000");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("test");
+        Trajectory trajectory = etldsService.decrypt(eTdls);
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        for (TimeLocationData tld : trajectory.getTlds()) {
+            System.out.println(tld);
+        }
+    }
 
     @Test
     public void testTree() throws IOException, ParseException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\18124\\Desktop\\DataBase\\000\\20081023234104.txt"));
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\DataBase\\000\\20081023234104.txt"));
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
         eTdls.setUserId("000");
-        etldsService.selectByETLDs(eTdls);
+        List<EncTrajectory> encTrajectories = etldsService.selectByETLDs(eTdls);
+        if(etldsService.query(encTrajectories,eTdls)){
+            //etldsService.add(eTdls);
+        }
     }
 }

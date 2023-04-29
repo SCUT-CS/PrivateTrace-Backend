@@ -7,14 +7,15 @@ import cn.edu.scut.priloc.pojo.EncTrajectory;
 import java.io.*;
 
 public class TreeUtils {
+
+    static String path=System.getProperty("user.dir")+"\\DataBase\\tree.txt";
     public static BTreePlus<BeginEndPath> getTree(){
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\18124\\Desktop\\DataBase\\tree.txt"));
+            System.out.println(path);
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
             BTreePlus<BeginEndPath> bTreePlus = (BTreePlus<BeginEndPath>) inputStream.readObject();
             return bTreePlus;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

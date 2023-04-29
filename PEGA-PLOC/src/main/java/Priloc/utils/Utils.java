@@ -1,13 +1,14 @@
 package Priloc.utils;
 
-import sg.smu.securecom.protocol.Paillier;
-
 import java.io.*;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.Objects;
 
 public class Utils {
+
+    public  static BigInteger decryptBigInteger(BigInteger i) {
+        return User.pai.decrypt(i);
+    }
 
     public static BigInteger encryptDouble(double d) {
         return User.pai.encrypt(BigInteger.valueOf(Math.round(d * Math.pow(10, Constant.FIXED_POINT))));

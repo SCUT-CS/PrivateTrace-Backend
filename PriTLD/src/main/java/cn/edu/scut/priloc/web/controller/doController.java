@@ -29,10 +29,11 @@ public class doController {
             HttpServletRequest request) throws IOException, ParseException {
         //从前端接收一个plt文件和用户名
         //获取明文轨迹
-        System.out.println(multipartFile.getName());
         System.out.println(request.getServletContext().getRealPath(""));
-        String path="E:\\GitHub\\PriTLD\\PriTLD\\temp/" + multipartFile.getOriginalFilename();
-        multipartFile.transferTo(new File("E:\\GitHub\\PriTLD\\PriTLD\\temp/" + multipartFile.getOriginalFilename()));
+        //获取文件暂存路径
+        String path=System.getProperty("user.dir")+"\\PriTLD\\temp/" + multipartFile.getOriginalFilename();
+        System.out.println(path);
+        multipartFile.transferTo(new File(path));
         File file = new File(path);
         TrajectoryReader reader=new TrajectoryReader(file);
         Trajectory trajectory = reader.load(userId);
@@ -47,7 +48,6 @@ public class doController {
     public EncTrajectory encrypt(
             HttpServletRequest request,
             @PathVariable String userId) throws IOException {
-        System.out.println("encrypt");
         HttpSession session = request.getSession();
         Trajectory trajectory = (Trajectory) session.getAttribute("tlds" + userId);
         //加密
@@ -68,8 +68,9 @@ public class doController {
         EncTrajectory encTrajectory = (EncTrajectory) request.getSession().getAttribute("etlds" + userId);
         List<EncTrajectory> encTrajectories = etldsService.selectByETLDs(encTrajectory);
         Boolean flag=etldsService.query(encTrajectories,encTrajectory);
-        //查询完成后添加到索引树
-        //eltdsService.add(encTrajectory);
+        if(flag){
+            etldsService.add(encTrajectory);
+        }
         return flag;
     }
 
