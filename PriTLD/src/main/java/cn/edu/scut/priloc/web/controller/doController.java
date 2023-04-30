@@ -1,9 +1,11 @@
 package cn.edu.scut.priloc.web.controller;
 
+import cn.edu.scut.priloc.pojo.BeginEndPath;
 import cn.edu.scut.priloc.pojo.EncTrajectory;
 import cn.edu.scut.priloc.pojo.Trajectory;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.util.TrajectoryReader;
+import cn.edu.scut.priloc.util.TreeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,20 +63,33 @@ public class doController {
         return encTrajectory;
     }
     @RequestMapping("/query/{userId}")
-    public List<Trajectory> query(
+    public boolean query(
             HttpServletRequest request,
-            @PathVariable String userId) {
-        EncTrajectory encTrajectory = (EncTrajectory) request.getSession().getAttribute("etlds" + userId);
-        List<EncTrajectory> encTrajectories = eTldsService.selectByETLDs(encTrajectory);
-        List<Trajectory> trajectoryList = new ArrayList<>();
-        if(!eTldsService.query(encTrajectories,encTrajectory)){//如果判断交错，
-            //eTldsService.add(encTrajectory);//添加到阳性库
-            for (EncTrajectory eTld : encTrajectories) {//解密后发回前端
-                trajectoryList.add(eTldsService.decrypt(eTld));
-            }
+            @PathVariable String userId) throws Exception{
+//        EncTrajectory encTrajectory = (EncTrajectory) request.getSession().getAttribute("etlds" + userId);
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
+        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
+        eTdls.setUserId("000");
+        ArrayList<BeginEndPath> beginEndPathList = eTldsService.selectByETLDs(eTdls);
+        List<EncTrajectory> encTrajectories = new ArrayList<>();
+        for (BeginEndPath o : beginEndPathList) {
+            //读入磁盘位置中的加密轨迹
+            encTrajectories.add(TreeUtils.getETlds(System.getProperty("user.dir")+"\\PriTLD\\"+o.getPath()));
         }
-        return trajectoryList;//如果为空，说明没有交集
+//        boolean flag = eTldsService.query(encTrajectories,encTrajectory);
+//        if(!flag) {//如果判断交错，
+//            //eTldsService.add(encTrajectory);//添加到阳性库
+//        }
+        request.setAttribute(userId+"list",beginEndPathList);
+        return true;
     }
 
+    @GetMapping("/check/{userId}")
+    public List<Trajectory> check(
+            HttpServletRequest request,
+            @PathVariable String userId) throws IOException, ClassNotFoundException {
+        ArrayList<BeginEndPath> beginEndPathList = (ArrayList<BeginEndPath>) request.getSession().getAttribute(userId + "list");
+        return eTldsService.getTrajectoryList(beginEndPathList);
+    }
 
 }

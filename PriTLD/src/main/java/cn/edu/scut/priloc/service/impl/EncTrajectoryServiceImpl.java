@@ -13,6 +13,7 @@ import org.apache.commons.math3.util.FastMath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -43,17 +44,11 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     }
 
     @Override
-    public List<EncTrajectory> selectByETLDs(EncTrajectory encTrajectory) {
+    public ArrayList<BeginEndPath> selectByETLDs(EncTrajectory encTrajectory) {
         BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
-        BTreePlus bTreePlus= TreeUtils.getTree();
+        BTreePlus<BeginEndPath> bTreePlus= TreeUtils.getTree();
         ArrayList<BeginEndPath> list = bTreePlus.find(beginEndPath);
-        List<EncTrajectory> eTldsList=new ArrayList<>();
-        System.out.println(list);
-        for (BeginEndPath o : list) {
-            //读入磁盘位置中的加密轨迹
-            eTldsList.add(TreeUtils.getETlds(System.getProperty("user.dir")+"\\PriTLD\\"+o.getPath()));
-        }
-        return eTldsList;
+        return list;
     }
 
     @Override
@@ -77,27 +72,37 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         }
         return new EncTrajectory(eTlds,trajectory.getUserId());
     }
+
     @Override
-    public Trajectory decrypt(EncTrajectory encTrajectory) {
-        List<EncTimeLocationData> eTlds = encTrajectory.geteTlds();
-        List<Future<ArrayList<TimeLocationData>>> futures = new ArrayList<>();
-        int size=eTlds.size();
-        int step=size/5+1;
-        for(int i=0,j=0; i< size; i+=step,j++){
-            futures.add(encryptDecryptUtil.doDecrypt(eTlds, i, FastMath.min(i + step, size)));
+    public List<Trajectory> getTrajectoryList(ArrayList<BeginEndPath> beginEndPathArrayList) throws IOException, ClassNotFoundException {
+        List<Trajectory> trajectories = null;
+        for (BeginEndPath beginEndPath : beginEndPathArrayList) {
+            trajectories.add(TreeUtils.getTlds(beginEndPath));
         }
-        List<TimeLocationData> tlds = new ArrayList<>();
-        for (Future<ArrayList<TimeLocationData>> future : futures) {
-            try {
-                tlds.addAll(future.get());
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return new Trajectory(tlds,encTrajectory.getUserId());
+        return trajectories;
     }
+//    @Override
+//    public Trajectory decrypt(EncTrajectory encTrajectory) {
+//        List<EncTimeLocationData> eTlds = encTrajectory.geteTlds();
+//        List<Future<ArrayList<TimeLocationData>>> futures = new ArrayList<>();
+//        int size=eTlds.size();
+//        int step=size/5+1;
+//        for(int i=0,j=0; i< size; i+=step,j++){
+//            futures.add(encryptDecryptUtil.doDecrypt(eTlds, i, FastMath.min(i + step, size)));
+//        }
+//        List<TimeLocationData> tlds = new ArrayList<>();
+//        for (Future<ArrayList<TimeLocationData>> future : futures) {
+//            try {
+//                tlds.addAll(future.get());
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            } catch (ExecutionException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        return new Trajectory(tlds,encTrajectory.getUserId());
+//    }
+
     @Override
     public Boolean query(List<EncTrajectory> encTrajectories,EncTrajectory encTrajectory) {
         List<Priloc.data.EncTrajectory> encCircles = new ArrayList<>();

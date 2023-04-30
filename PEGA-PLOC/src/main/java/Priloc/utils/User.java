@@ -18,7 +18,7 @@ public class User {
 	static {
 		Keys key;
 		try {
-			key = (Keys) Utils.readObject("./keys");
+			key = (Keys) Utils.readObject("E:\\GitHub\\PriTLD\\PriTLD\\keys");
 		} catch (Exception e) {
 			key = new Keys(Constant.KEY_LEN);
 			try {
@@ -27,6 +27,7 @@ public class User {
 				throw new RuntimeException(ex);
 			}
 		}
+		System.out.println("n==>"+key.prikey.getNsquare());
 		prikey = key.prikey;
 		pai = key.pai;
 		ThdKey = key.ThdKey;

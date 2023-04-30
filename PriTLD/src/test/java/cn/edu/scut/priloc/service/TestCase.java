@@ -1,6 +1,9 @@
 package cn.edu.scut.priloc.service;
 
-import cn.edu.scut.priloc.pojo.*;
+import cn.edu.scut.priloc.pojo.BeginEndPath;
+import cn.edu.scut.priloc.pojo.EncTimeLocationData;
+import cn.edu.scut.priloc.pojo.EncTrajectory;
+import cn.edu.scut.priloc.pojo.Trajectory;
 import cn.edu.scut.priloc.util.TrajectoryReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.util.StopWatch;
 
 import java.io.*;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -56,29 +60,31 @@ public class TestCase {
             System.out.println(etld.getDate());
         }
     }
-    @Test
-    public void testDecrypt() throws IOException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
-        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
-        eTdls.setUserId("000");
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start("test");
-        Trajectory trajectory = etldsService.decrypt(eTdls);
-        stopWatch.stop();
-        System.out.println(stopWatch.prettyPrint());
-        for (TimeLocationData tld : trajectory.getTlds()) {
-            System.out.println(tld);
-        }
-    }
+//    @Test
+//    public void testDecrypt() throws IOException, ClassNotFoundException {
+//        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
+//        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
+//        eTdls.setUserId("000");
+//        StopWatch stopWatch = new StopWatch();
+//        stopWatch.start("test");
+//        Trajectory trajectory = etldsService.decrypt(eTdls);
+//        stopWatch.stop();
+//        System.out.println(stopWatch.prettyPrint());
+//        for (TimeLocationData tld : trajectory.getTlds()) {
+//            System.out.println(tld);
+//        }
+//    }
 
     @Test
     public void testTree() throws IOException, ParseException, ClassNotFoundException {
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\DataBase\\000\\20081023234104.txt"));
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
         eTdls.setUserId("000");
-        List<EncTrajectory> encTrajectories = etldsService.selectByETLDs(eTdls);
-        if(etldsService.query(encTrajectories,eTdls)){
-            //etldsService.add(eTdls);
+        ArrayList<BeginEndPath> beginEndPathArrayList = etldsService.selectByETLDs(eTdls);
+        System.out.println(beginEndPathArrayList.size());
+        List<Trajectory> trajectoryList = etldsService.getTrajectoryList(beginEndPathArrayList);
+        for (Trajectory trajectory : trajectoryList) {
+            System.out.println(trajectory);
         }
 
     }

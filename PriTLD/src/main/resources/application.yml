@@ -2,3 +2,22 @@ server:
   port: 80
   tomcat:
     basedir: E:\TomcatTemp
+spring:
+  profiles:
+    active: fzy
+---
+tree:
+  db-path: E:\GitHub\PriTLD\PriTLD\DataBase
+  data-path: E:\GitHub\PriTLD\Data
+spring:
+  config:
+    activate:
+      on-profile: fzy
+---
+tree:
+  db-path:
+  data-path:
+spring:
+  config:
+    activate:
+      on-profile: lpz

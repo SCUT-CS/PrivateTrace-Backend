@@ -1,6 +1,7 @@
 package cn.edu.scut.priloc.util;
 
 import Priloc.geo.Location;
+import cn.edu.scut.priloc.pojo.BeginEndPath;
 import cn.edu.scut.priloc.pojo.TimeLocationData;
 import cn.edu.scut.priloc.pojo.Trajectory;
 
@@ -12,7 +13,7 @@ import java.util.*;
 
 public class TrajectoryReader {
 
-    private static String[] dateStrings;
+    private static final String[] dateStrings;
 
     SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -66,6 +67,16 @@ public class TrajectoryReader {
         return new Trajectory(tlds,userId);
     }
 
+    public Trajectory loadWithBep(BeginEndPath beginEndPath) {
+        List<TimeLocationData> tlds = new ArrayList<>();
+        while(scanner.hasNext()){
+            String[] tokens = scanner.next().split(",");
+            Location location = new Location(Double.parseDouble(tokens[0]),Double.parseDouble(tokens[1]));
+            //只需验证地点
+            tlds.add(new TimeLocationData(location,null));
+        }
+        return new Trajectory(tlds, beginEndPath.getUserId());
+    }
     public Scanner getScanner() {
         return scanner;
     }
