@@ -19,6 +19,7 @@ import java.util.List;
 public class TestCase {
     @Autowired
     EncTrajectoryService etldsService;
+
     @Test
     public void testAdd() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");

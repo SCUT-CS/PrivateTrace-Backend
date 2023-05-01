@@ -7,6 +7,7 @@ import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.util.TrajectoryReader;
 import cn.edu.scut.priloc.util.TreeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,9 @@ public class doController {
 
     @Autowired
     private EncTrajectoryService eTldsService;
+
+    @Value("${tree.temp-path}")
+    private String tempPath;
     @GetMapping("/upload/{userId}")
     public Trajectory upload(
             @RequestBody MultipartFile multipartFile,
@@ -33,7 +37,7 @@ public class doController {
         //获取明文轨迹
         System.out.println(request.getServletContext().getRealPath(""));
         //获取文件暂存路径
-        String path=System.getProperty("user.dir")+"\\PriTLD\\temp/" + multipartFile.getOriginalFilename();
+        String path=tempPath +"\\"+ multipartFile.getOriginalFilename();
         System.out.println(path);
         multipartFile.transferTo(new File(path));
         File file = new File(path);

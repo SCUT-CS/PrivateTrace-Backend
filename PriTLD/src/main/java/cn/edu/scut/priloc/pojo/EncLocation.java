@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 public class EncLocation implements Serializable {
+
+    private static final long serialVersionUID =1L;
     @JsonIgnore
     private BigInteger latitude;
     @JsonIgnore

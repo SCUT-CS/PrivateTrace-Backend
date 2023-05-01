@@ -3,15 +3,14 @@ package Priloc.area.basic;
 import Priloc.utils.Constant;
 import Priloc.utils.User;
 import Priloc.utils.Utils;
-import sg.smu.securecom.keys.PaillierKey;
-import sg.smu.securecom.protocol.Paillier;
-import sg.smu.securecom.protocol.PaillierThdDec;
 import sg.smu.securecom.protocol.SecMul;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 
 public class EncryptedPoint implements Serializable {
+
+    private static final long serialVersionUID =1L;
 //    private BigInteger encX, encY, encZ;
     private BigInteger encX4, encY4, encZ4;
     private BigInteger encXX, encYY, encZZ;
