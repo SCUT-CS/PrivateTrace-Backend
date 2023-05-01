@@ -15,10 +15,10 @@ public class Test1 {
         for (TimeLocationData tld : trajectory.getTlds()) {
             System.out.println(tld);
         }
-        EncTrajectory encTrajectory = new EncTrajectory(trajectory);
-        for(EncTimeLocationData eTld : encTrajectory.geteTlds()){
-            System.out.println(eTld.getEncPoint());
-        }
+//        EncTrajectory encTrajectory = new EncTrajectory(trajectory);
+//        for(EncTimeLocationData eTld : encTrajectory.geteTlds()){
+//            System.out.println(eTld.getEncPoint());
+//        }
         //System.out.println(JSON.toJSONString(trajectory));
     }
 }
