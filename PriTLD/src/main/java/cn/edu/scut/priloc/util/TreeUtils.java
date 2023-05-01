@@ -18,6 +18,8 @@ public class TreeUtils {
 
     public static String dataPath;
 
+    static SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+
     @Value("${tree.db-path}")
     public void setDBPath(String DBPath) {
         TreeUtils.DBPath = DBPath;
@@ -29,14 +31,13 @@ public class TreeUtils {
 
     public static BTreePlus<BeginEndPath> getTree(){
         try {
-            System.out.println(DBPath);
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(DBPath +"\\tree.txt"));
             return (BTreePlus<BeginEndPath>) inputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
-    public static void storeTree(BTreePlus bTreePlus){
+    public static void storeTree(BTreePlus<BeginEndPath> bTreePlus){
         ObjectOutputStream outputStream = null;
         try {
             outputStream = new ObjectOutputStream(new FileOutputStream(DBPath +"\\tree.txt"));
@@ -47,20 +48,20 @@ public class TreeUtils {
     }
     public static void setETlds(EncTrajectory encTrajectory){
         try {
-            //创建以该用户id命名的目录,文件名为当前时间
-            File file = new File(DBPath +"\\001");
+            //创建以该用户id命名的目录
+            File file = new File(DBPath +"\\"+encTrajectory.getUserId());
             file.mkdir();
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
             String name=format.format(encTrajectory.geteTlds().get(0).getDate())+".txt";
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(DBPath + "\\" + encTrajectory.getUserId() + "\\" + name));
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file.getPath() + "\\" + name));
             outputStream.writeObject(encTrajectory);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    public static EncTrajectory getETlds(String path){
+    public static EncTrajectory getETlds(BeginEndPath bep){
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
+            String name = bep.getPath().split("\\.")[0];
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(DBPath+"\\"+bep.getUserId()+"\\"+name+".txt"));
             return (EncTrajectory) inputStream.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -70,8 +71,7 @@ public class TreeUtils {
     }
 
     public static Trajectory getTlds(BeginEndPath bep) throws IOException, ClassNotFoundException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        String name=format.format(bep.getBeginTime())+".plt";
+        String name=bep.getPath();
         //读出数据集的数据
         TrajectoryReader reader = new TrajectoryReader(dataPath+"\\"+bep.getUserId()+"\\Trajectory\\"+name);
         return reader.loadWithBep(bep);

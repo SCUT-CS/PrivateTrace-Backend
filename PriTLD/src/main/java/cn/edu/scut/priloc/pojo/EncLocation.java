@@ -3,7 +3,6 @@ package cn.edu.scut.priloc.pojo;
 import Priloc.geo.Location;
 import Priloc.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import sg.smu.securecom.protocol.Paillier;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -25,13 +24,6 @@ public class EncLocation implements Serializable {
         this.longitude= Utils.encryptDouble(location.getLongitude(),8);
     }
 
-    public Location deEnc(EncLocation encLocation){
-        Paillier paillier = new Paillier();
-        BigInteger e = new BigInteger(String.valueOf(1e8));
-        double lati =paillier.decrypt(this.latitude).divide(e).doubleValue();
-        double longi = paillier.decrypt(this.longitude).divide(e).doubleValue();
-        return new Location(lati,longi);
-    }
     public EncLocation(BigInteger latitude, BigInteger longitude) {
         this.latitude = latitude;
         this.longitude = longitude;

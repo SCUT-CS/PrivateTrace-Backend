@@ -17,7 +17,7 @@ public interface EncTrajectoryService {
 
     EncTrajectory encrypt(Trajectory trajectory) throws IOException;
 
-    //Trajectory decrypt(EncTrajectory encTrajectory);
+    Trajectory decrypt(EncTrajectory encTrajectory);
 
     List<Trajectory> getTrajectoryList(ArrayList<BeginEndPath> beginEndPathArrayList) throws IOException, ClassNotFoundException;
 

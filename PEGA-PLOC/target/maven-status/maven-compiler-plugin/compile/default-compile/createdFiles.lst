@@ -2,7 +2,9 @@ Priloc\area\basic\Plane.class
 Priloc\geo\Utils.class
 Priloc\area\basic\Circle$distantFilter.class
 sg\smu\securecom\utils\TestFraction.class
+Priloc\protocol\Tmain2.class
 Priloc\protocol\EncSquareDistance.class
+Priloc\protocol\Tmain.class
 Priloc\utils\Pair.class
 Priloc\area\basic\Circle$areaFilter.class
 Priloc\area\basic\Circle.class
@@ -19,6 +21,7 @@ Priloc\protocol\Main2.class
 Priloc\utils\User.class
 Priloc\data\EncTrajectory.class
 sg\smu\securecom\protocol\Paillier.class
+Priloc\area\shape\Shape.class
 sg\smu\securecom\utils\Pair.class
 Priloc\data\EncTmLocData.class
 Priloc\protocol\ConcentricCircles.class
@@ -38,6 +41,7 @@ sg\smu\securecom\protocol\SecMul.class
 sg\smu\securecom\utils\Utils.class
 Priloc\area\basic\Circle$circleFilter.class
 Priloc\geo\Location.class
+Priloc\protocol\Main3.class
 sg\smu\securecom\protocol\PaillierThdDec.class
 sg\smu\securecom\utils\Logarithms.class
 sg\smu\securecom\keys\PaillierThdPrivateKey.class

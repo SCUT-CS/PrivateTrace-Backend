@@ -9,6 +9,7 @@ spring:
 tree:
   db-path: E:\GitHub\PriTLD\PriTLD\DataBase
   data-path: E:\GitHub\PriTLD\Data
+  temp-path: E:\GitHub\PriTLD\PriTLD\temp
 spring:
   config:
     activate:

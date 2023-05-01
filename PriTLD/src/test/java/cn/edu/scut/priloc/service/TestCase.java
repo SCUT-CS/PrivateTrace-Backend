@@ -1,10 +1,8 @@
 package cn.edu.scut.priloc.service;
 
-import cn.edu.scut.priloc.pojo.BeginEndPath;
-import cn.edu.scut.priloc.pojo.EncTimeLocationData;
-import cn.edu.scut.priloc.pojo.EncTrajectory;
-import cn.edu.scut.priloc.pojo.Trajectory;
+import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.util.TrajectoryReader;
+import cn.edu.scut.priloc.util.TreeUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,17 +20,9 @@ public class TestCase {
 
     @Test
     public void testAdd() throws IOException, ParseException {
-        TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");
-        Trajectory trajectory=reader.load("001");
-        File file = new File("DataBase/001");
-        System.out.println(file.getAbsoluteFile());
-        System.out.println(file.mkdir());
-
-        //用用户id和时间作为文件名
-        String path="DataBase/"+trajectory.getUserId()+"/"+System.currentTimeMillis()+".txt";
-        //将轨迹存储到数据库（序列化）
-        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
-        outputStream.writeObject(trajectory);
+        TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\003\\Trajectory\\20081024020227.plt");
+        Trajectory trajectory=reader.load("003");
+        etldsService.add(etldsService.encrypt(trajectory));
     }
 
     @Test
@@ -58,35 +48,37 @@ public class TestCase {
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
         for (EncTimeLocationData etld : encTrajectory.geteTlds()) {
-            System.out.println(etld.getDate());
+            System.out.println(etld.getEncPoint());
         }
     }
-//    @Test
-//    public void testDecrypt() throws IOException, ClassNotFoundException {
-//        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
-//        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
-//        eTdls.setUserId("000");
-//        StopWatch stopWatch = new StopWatch();
-//        stopWatch.start("test");
-//        Trajectory trajectory = etldsService.decrypt(eTdls);
-//        stopWatch.stop();
-//        System.out.println(stopWatch.prettyPrint());
-//        for (TimeLocationData tld : trajectory.getTlds()) {
-//            System.out.println(tld);
-//        }
-//    }
+    @Test
+    public void testDecrypt() throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\003\\20081024175854.txt"));
+        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
+        eTdls.setUserId("003");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("test");
+        Trajectory trajectory = etldsService.decrypt(eTdls);
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        for (TimeLocationData tld : trajectory.getTlds()) {
+            System.out.println(tld);
+        }
+    }
 
     @Test
     public void testTree() throws IOException, ParseException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\DataBase\\000\\20081023234104.txt"));
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\000\\20081024020959.txt"));
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
         eTdls.setUserId("000");
-        ArrayList<BeginEndPath> beginEndPathArrayList = etldsService.selectByETLDs(eTdls);
-        System.out.println(beginEndPathArrayList.size());
-        List<Trajectory> trajectoryList = etldsService.getTrajectoryList(beginEndPathArrayList);
-        for (Trajectory trajectory : trajectoryList) {
-            System.out.println(trajectory);
+        ArrayList<BeginEndPath> beginEndPathList = etldsService.selectByETLDs(eTdls);
+        System.out.println(beginEndPathList.size());
+        List<EncTrajectory> encTrajectories = new ArrayList<>();
+        for (BeginEndPath o : beginEndPathList) {
+            //读入磁盘位置中的加密轨迹
+            encTrajectories.add(TreeUtils.getETlds(o));
         }
+        System.out.println(etldsService.query(encTrajectories,eTdls));
 
     }
 }

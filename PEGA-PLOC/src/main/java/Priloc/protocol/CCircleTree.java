@@ -3,17 +3,16 @@ package Priloc.protocol;
 import Priloc.data.EncTmLocData;
 import Priloc.data.EncTrajectory;
 import Priloc.utils.Constant;
-import Priloc.utils.Utils;
-import sg.smu.securecom.protocol.Paillier;
-import sg.smu.securecom.protocol.PaillierThdDec;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class CCircleTree implements Serializable {
     private HashMap<Date, ConcentricCircles> ccTree;
-    private transient ThreadLocal<Map<ConcentricCircles, boolean[]>> localPrune = new ThreadLocal<>();
+    private transient static ThreadLocal<Map<ConcentricCircles, boolean[]>> localPrune = new ThreadLocal<>();
     private static final List<EncTrajectory> workLoad = new LinkedList<>();
 
     public CCircleTree() {
@@ -60,16 +59,16 @@ public class CCircleTree implements Serializable {
 
     private void refresh() {
         for (ConcentricCircles concentricCircles : ccTree.values()) {
-            this.localPrune.get().put(concentricCircles, new boolean[concentricCircles.size()]);
+            localPrune.get().put(concentricCircles, new boolean[concentricCircles.size()]);
         }
     }
 
     public void prune(ConcentricCircles concentricCircles, int i) {
-        this.localPrune.get().get(concentricCircles)[i] = true;
+        localPrune.get().get(concentricCircles)[i] = true;
     }
 
     public boolean getPrune(ConcentricCircles concentricCircles, int i) {
-        return this.localPrune.get().get(concentricCircles)[i];
+        return localPrune.get().get(concentricCircles)[i];
     }
 
     public synchronized void addWork(EncTrajectory encTrajectory){
@@ -107,21 +106,23 @@ public class CCircleTree implements Serializable {
         return true;
     }
 
-    public void run() {
-        if (this.localPrune == null) {
-            this.localPrune = new ThreadLocal<>();
+    public boolean run() {
+        if (localPrune == null) {
+            localPrune = new ThreadLocal<>();
         }
-        this.localPrune.set(new HashMap<>());
+        localPrune.set(new HashMap<>());
+        boolean flag =false;
         while (true) {
             EncTrajectory encTrajectory = popWork();
             if (encTrajectory == null) {
                 break;
             }
             refresh();
-            boolean res = compare(encTrajectory);
-            if (!res) {
+            if (!compare(encTrajectory)) {//有阳性相交
+                flag=true;
                 System.out.println(encTrajectory);
             }
         }
+        return flag;//没有
     }
 }

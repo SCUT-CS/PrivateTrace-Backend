@@ -14,7 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,6 @@ public class doController {
         System.out.println(request.getServletContext().getRealPath(""));
         //获取文件暂存路径
         String path=tempPath +"\\"+ multipartFile.getOriginalFilename();
-        System.out.println(path);
         multipartFile.transferTo(new File(path));
         File file = new File(path);
         TrajectoryReader reader=new TrajectoryReader(file);
@@ -56,6 +56,7 @@ public class doController {
             @PathVariable String userId) throws IOException {
         HttpSession session = request.getSession();
         Trajectory trajectory = (Trajectory) session.getAttribute("tlds" + userId);
+        session.removeAttribute("tlds" + userId);
         //加密
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("加密");
@@ -70,29 +71,34 @@ public class doController {
     public boolean query(
             HttpServletRequest request,
             @PathVariable String userId) throws Exception{
-//        EncTrajectory encTrajectory = (EncTrajectory) request.getSession().getAttribute("etlds" + userId);
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
-        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
-        eTdls.setUserId("000");
-        ArrayList<BeginEndPath> beginEndPathList = eTldsService.selectByETLDs(eTdls);
+        HttpSession session = request.getSession();
+        EncTrajectory encTrajectory = (EncTrajectory) session.getAttribute("etlds" + userId);
+        session.removeAttribute("etlds" + userId);
+//        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
+//        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
+//        eTdls.setUserId("000");
+        ArrayList<BeginEndPath> beginEndPathList = eTldsService.selectByETLDs(encTrajectory);
+        System.out.println(beginEndPathList.size());
         List<EncTrajectory> encTrajectories = new ArrayList<>();
         for (BeginEndPath o : beginEndPathList) {
             //读入磁盘位置中的加密轨迹
-            encTrajectories.add(TreeUtils.getETlds(System.getProperty("user.dir")+"\\PriTLD\\"+o.getPath()));
+            encTrajectories.add(TreeUtils.getETlds(o));
         }
-//        boolean flag = eTldsService.query(encTrajectories,encTrajectory);
-//        if(!flag) {//如果判断交错，
-//            //eTldsService.add(encTrajectory);//添加到阳性库
-//        }
-        request.setAttribute(userId+"list",beginEndPathList);
-        return true;
+        boolean flag = eTldsService.query(encTrajectories,encTrajectory);
+        if(flag) {//如果判断交错，
+            eTldsService.add(encTrajectory);//添加到阳性库
+        }
+        session.setAttribute(userId+"list",beginEndPathList);
+        return flag;
     }
 
     @GetMapping("/check/{userId}")
     public List<Trajectory> check(
             HttpServletRequest request,
             @PathVariable String userId) throws IOException, ClassNotFoundException {
-        ArrayList<BeginEndPath> beginEndPathList = (ArrayList<BeginEndPath>) request.getSession().getAttribute(userId + "list");
+        HttpSession session = request.getSession();
+        ArrayList<BeginEndPath> beginEndPathList = (ArrayList<BeginEndPath>) session.getAttribute(userId + "list");
+        session.removeAttribute(userId + "list");
         return eTldsService.getTrajectoryList(beginEndPathList);
     }
 
