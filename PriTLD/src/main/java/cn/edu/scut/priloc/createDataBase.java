@@ -55,7 +55,7 @@ public class createDataBase {
                 ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(newFile));
                 outputStream.writeObject(encTrajectory);
                 BeginEndPath beginEndPath = new BeginEndPath(encTrajectory);
-                String abstractPath = "DataBase\\" + id + "\\" + fileName + ".txt";
+                String abstractPath = fileName + ".plt";
                 beginEndPath.setPath(abstractPath);
                 beginEndPath.setUserId(id);
                 entryNode = new Entry<>(beginEndPath.getBeginTime(), beginEndPath);
