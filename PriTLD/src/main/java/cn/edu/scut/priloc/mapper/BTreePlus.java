@@ -38,6 +38,22 @@ public class BTreePlus<V> implements Serializable {
         return root;
     }
 
+    //写一个遍历叶子节点的函数
+    public ArrayList<V> findAll(){
+        ArrayList<V> resultOfFind = new ArrayList<>();
+        Node<V> rootOfFind = this.getRoot();
+        while(!rootOfFind.isLeaf()){
+            rootOfFind = rootOfFind.childAt(0);
+        }
+        while(rootOfFind != null){
+            for (int i = 0; i < rootOfFind.getKeysSize(); i++) {
+                resultOfFind.add(rootOfFind.entryAt(i).getValue());
+            }
+            rootOfFind = rootOfFind.getNextNode();
+        }
+        return resultOfFind;
+    }
+
     //查找
     public ArrayList<V> find(BeginEndPath bep){
         ArrayList<V> resultOfFind = new ArrayList<>();
