@@ -12,7 +12,6 @@ cn\edu\scut\priloc\pojo\tableData.class
 cn\edu\scut\priloc\util\TrajectoryReader.class
 cn\edu\scut\priloc\pojo\EncTimeLocationData.class
 cn\edu\scut\priloc\mapper\Entry.class
-cn\edu\scut\priloc\util\StreamGo.class
 cn\edu\scut\priloc\util\SpringUtils.class
 cn\edu\scut\priloc\pojo\Trajectory.class
 cn\edu\scut\priloc\MyApplication.class
@@ -22,5 +21,6 @@ cn\edu\scut\priloc\pojo\TimeLocationData.class
 cn\edu\scut\priloc\service\impl\EncTrajectoryServiceImpl.class
 cn\edu\scut\priloc\util\TreeUtils.class
 cn\edu\scut\priloc\util\EncryptDecryptUtil.class
+cn\edu\scut\priloc\createUnencDataBase.class
 cn\edu\scut\priloc\mapper\BepReader.class
 cn\edu\scut\priloc\pojo\BeginEndPath.class
