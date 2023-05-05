@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
   tomcat:
     basedir: E:\TomcatTemp
 spring:
@@ -12,7 +12,7 @@ spring:
 ---
 tree:
   db-path: E:\GitHub\PriTLD\PriTLD\DataBase
-  data-path: E:\GitHub\PriTLD\Data
+  data-path: E:\GitHub\PriTLD\PriTLD\UnencDataBase
   temp-path: E:\GitHub\PriTLD\PriTLD\temp
 spring:
   config:

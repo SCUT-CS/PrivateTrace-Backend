@@ -46,22 +46,26 @@ public class TreeUtils {
             throw new RuntimeException(e);
         }
     }
-    public static void setETlds(EncTrajectory encTrajectory,String name){
+    public static void setETldsAndTlds(EncTrajectory encTrajectory, Trajectory trajectory,String name){
         try {
             //创建以该用户id命名的目录
-            File file = new File(DBPath +"\\"+encTrajectory.getUserId());
-            file.mkdir();
+            File File1 = new File(DBPath +"\\"+encTrajectory.getUserId());
+            File1.mkdir();
+            File File2 = new File(dataPath +"\\"+encTrajectory.getUserId());
+            File2.mkdir();
             name = name.split("\\.")[0]+".txt";
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file.getPath() + "\\" + name));
-            outputStream.writeObject(encTrajectory);
+            ObjectOutputStream outputStream1 = new ObjectOutputStream(new FileOutputStream(File1.getPath() + "\\" + name));
+            outputStream1.writeObject(encTrajectory);
+            ObjectOutputStream outputStream2 = new ObjectOutputStream(new FileOutputStream(File2.getPath() + "\\" + name));
+            outputStream2.writeObject(trajectory);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     public static EncTrajectory getETlds(BeginEndPath bep){
         try {
-            String name = bep.getPath().split("\\.")[0];
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(DBPath+"\\"+bep.getUserId()+"\\"+name+".txt"));
+            String name = bep.getPath().split("\\.")[0]+".txt";
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(DBPath+"\\"+bep.getUserId()+"\\"+name));
             return (EncTrajectory) inputStream.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -71,9 +75,8 @@ public class TreeUtils {
     }
 
     public static Trajectory getTlds(BeginEndPath bep) throws IOException, ClassNotFoundException {
-        String name=bep.getPath();
-        //读出数据集的数据
-        TrajectoryReader reader = new TrajectoryReader(dataPath+"\\"+bep.getUserId()+"\\Trajectory\\"+name);
-        return reader.loadWithBep(bep);
+        String name=bep.getPath().split("\\.")[0]+".txt";
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(dataPath+"\\"+bep.getUserId()+"\\"+name));
+        return (Trajectory) inputStream.readObject();
     }
 }

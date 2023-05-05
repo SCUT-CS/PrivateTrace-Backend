@@ -8,6 +8,7 @@ cn\edu\scut\priloc\pojo\Page.class
 cn\edu\scut\priloc\web\controller\doController.class
 cn\edu\scut\priloc\createDataBase.class
 cn\edu\scut\priloc\config\ThreadPoolConfig.class
+cn\edu\scut\priloc\pojo\tableData.class
 cn\edu\scut\priloc\util\TrajectoryReader.class
 cn\edu\scut\priloc\pojo\EncTimeLocationData.class
 cn\edu\scut\priloc\mapper\Entry.class

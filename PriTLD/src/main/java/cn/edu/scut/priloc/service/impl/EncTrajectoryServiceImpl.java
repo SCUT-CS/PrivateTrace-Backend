@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -31,10 +32,29 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         return null;
     }
 
+
     @Override
-    public void add(EncTrajectory encTrajectory,String name) {
+    public List<tableData> showAll() {
+        BTreePlus<BeginEndPath> tree = TreeUtils.getTree();
+        ArrayList<BeginEndPath> all = tree.findAll();
+        List<tableData> tableDatas=new ArrayList<>();
+        for (BeginEndPath beginEndPath : all) {
+            tableDatas.add(new tableData(beginEndPath));
+        }
+        return tableDatas;
+    }
+
+    @Override
+    public EncTrajectory showByIndex(int index) {
+        BTreePlus<BeginEndPath> tree = TreeUtils.getTree();
+        ArrayList<BeginEndPath> all = tree.findAll();
+        return TreeUtils.getETlds(all.get(index));
+    }
+
+    @Override
+    public void add(EncTrajectory encTrajectory,Trajectory trajectory,String name) {
         //将轨迹存储到数据库（序列化）
-        TreeUtils.setETlds(encTrajectory,name);
+        TreeUtils.setETldsAndTlds(encTrajectory,trajectory,name);
         //添加到索引树上 调用service方法
         BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
         beginEndPath.setPath(name);
@@ -75,17 +95,45 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     }
 
     @Override
-    public List<Trajectory> getTrajectoryList(ArrayList<BeginEndPath> beginEndPathArrayList) throws IOException, ClassNotFoundException {
+    public List<Trajectory> getTrajectoryList(ArrayList<BeginEndPath> beginEndPathArrayList,Trajectory trajectory) throws IOException, ClassNotFoundException {
         List<Trajectory> trajectories = new ArrayList<>();
+        List<TimeLocationData> temp= trajectory.getTlds();
+        Instant beginTime = temp.get(0).getDate().toInstant();
+        Instant endTime = temp.get(temp.size()-1).getDate().toInstant();
         for (BeginEndPath beginEndPath : beginEndPathArrayList) {
-            Trajectory trajectory = TreeUtils.getTlds(beginEndPath);
-            //坐标转换
-            for (TimeLocationData tld : trajectory.getTlds()) {
-                double[] bd09 = CoordinateTransformUtil.wgs84tobd09(tld.getLocation().getLongitude(), tld.getLocation().getLatitude());
-                tld.getLocation().setLongitude(bd09[0]);
-                tld.getLocation().setLatitude(bd09[1]);
+            Trajectory tlds = TreeUtils.getTlds(beginEndPath);
+            List<TimeLocationData> tldList = tlds.getTlds();
+            List<TimeLocationData> tempList=new ArrayList<>();
+            //删除多余的tld
+            boolean flag=false;
+            for (int i = 0; i < tldList.size()-1 ; i++) {
+                TimeLocationData tld1 = tldList.get(i);
+                TimeLocationData tld2 = tldList.get(i+1);
+                //最后一个小于beginTime
+                if(tld1.getDate().toInstant().isBefore(beginTime)&&tld2.getDate().toInstant().isAfter(beginTime)){
+                    flag=true;
+                }
+                //第一个大于beginTime
+                if (tld1.getDate().toInstant().isAfter(beginTime)&&tld1.getDate().toInstant().isBefore(endTime)) flag=true;
+                if(flag){
+                    //坐标转换
+                    double[] bd09 = CoordinateTransformUtil.wgs84tobd09(tld1.getLocation().getLongitude(), tld1.getLocation().getLatitude());
+                    tld1.getLocation().setLongitude(bd09[0]);
+                    tld1.getLocation().setLatitude(bd09[1]);
+                    tempList.add(tld1);
+                    //第一个大于endTime，仍可以加，后面不能加
+                    if(tld1.getDate().toInstant().isAfter(endTime)){
+                        flag=false;
+                    }
+                }
             }
-            trajectories.add(trajectory);
+//            System.out.println("---------");
+//            for (TimeLocationData timeLocationData : tempList) {
+//                System.out.println(timeLocationData.getDate());
+//            }
+            // TODO: 找出轨迹中的断点并分裂
+            tlds.setTlds(tempList);
+            trajectories.add(tlds);
         }
         return trajectories;
     }

@@ -63,7 +63,6 @@ public class EncTimeLocationData implements Serializable {
     public String toString() {
         return "EncTimeLocationData{" +
                 "encLocation=" + encLocation +
-                ", encPoint=" + encPoint +
                 ", date=" + date +
                 '}';
     }

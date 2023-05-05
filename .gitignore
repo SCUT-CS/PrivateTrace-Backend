@@ -28,9 +28,9 @@ Data
 target/
 PriTLD/src/main/java/cn/edu/scut/priloc/util/StreamGo.java
 .idea/compiler.xml
-.idea/compiler.xml
 .idea/encodings.xml
 .idea/jarRepositories.xml
 .idea/misc.xml
 .idea/vcs.xml
 DataBase
+UnencDataBase

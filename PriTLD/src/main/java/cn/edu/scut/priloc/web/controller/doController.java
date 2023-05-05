@@ -1,9 +1,6 @@
 package cn.edu.scut.priloc.web.controller;
 
-import cn.edu.scut.priloc.pojo.BeginEndPath;
-import cn.edu.scut.priloc.pojo.EncTrajectory;
-import cn.edu.scut.priloc.pojo.TimeLocationData;
-import cn.edu.scut.priloc.pojo.Trajectory;
+import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
 import cn.edu.scut.priloc.util.CoordinateTransformUtil;
 import cn.edu.scut.priloc.util.TrajectoryReader;
@@ -31,6 +28,15 @@ public class doController {
 
     @Value("${tree.temp-path}")
     private String tempPath;
+    @GetMapping("/showAll")
+    public List<tableData> showAll(){
+        return eTldsService.showAll();
+    }
+
+    @GetMapping("/showByIndex")
+    public EncTrajectory showByIndex(@RequestParam("index") int index){
+        return eTldsService.showByIndex(index);
+    }
     @PostMapping("/upload/{userId}")
     public Trajectory upload(
             @RequestBody MultipartFile multipartFile,
@@ -67,7 +73,6 @@ public class doController {
             @PathVariable String userId) throws IOException {
         HttpSession session = request.getSession();
         Trajectory trajectory = (Trajectory) session.getAttribute("tlds" + userId);
-        session.removeAttribute("tlds" + userId);
         //加密
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("加密");
@@ -99,7 +104,9 @@ public class doController {
         if(flag) {//如果判断交错，
             String name = (String) session.getAttribute("fileName" + userId);
             System.out.println(name);
-            //eTldsService.add(encTrajectory);//添加到阳性库
+            Trajectory trajectory = (Trajectory) session.getAttribute("tlds" + userId);
+            //TODO 最后记得测试添加
+            //eTldsService.add(encTrajectory,trajectory,name);//添加到阳性库
         }
         session.setAttribute(userId+"list",beginEndPathList);
         return flag;
@@ -111,8 +118,10 @@ public class doController {
             @PathVariable String userId) throws IOException, ClassNotFoundException {
         HttpSession session = request.getSession();
         ArrayList<BeginEndPath> beginEndPathList = (ArrayList<BeginEndPath>) session.getAttribute(userId + "list");
+        Trajectory trajectory = (Trajectory) session.getAttribute("tlds" + userId);
+        session.removeAttribute("tlds" + userId);
         session.removeAttribute(userId + "list");
-        return eTldsService.getTrajectoryList(beginEndPathList);
+        return eTldsService.getTrajectoryList(beginEndPathList,trajectory);
     }
 
 }

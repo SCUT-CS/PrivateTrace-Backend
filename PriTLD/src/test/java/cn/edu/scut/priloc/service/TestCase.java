@@ -22,7 +22,7 @@ public class TestCase {
     public void testAdd() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\003\\Trajectory\\20081024020227.plt");
         Trajectory trajectory=reader.load("003");
-        etldsService.add(etldsService.encrypt(trajectory),"20081024020227.plt");
+        etldsService.add(etldsService.encrypt(trajectory),trajectory,"20081024020227.plt");
     }
 
     @Test
@@ -79,6 +79,30 @@ public class TestCase {
             encTrajectories.add(TreeUtils.getETlds(o));
         }
         System.out.println(etldsService.query(encTrajectories,eTdls));
+    }
+
+    @Test
+    public void testCut() throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream1 = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\000\\20081211044624.txt"));
+        EncTrajectory eTlds = (EncTrajectory) inputStream1.readObject();
+        ObjectInputStream inputStream2 = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\UnencDataBase\\000\\20081211044624.txt"));
+        Trajectory tlds = (Trajectory) inputStream2.readObject();
+        eTlds.setUserId("000");
+        ArrayList<BeginEndPath> beginEndPathList = etldsService.selectByETLDs(eTlds);
+        System.out.println(beginEndPathList.size());
+        List<Trajectory> trajectoryList = etldsService.getTrajectoryList(beginEndPathList, tlds);
+        System.out.println(trajectoryList.size());
+        for (Trajectory trajectory : trajectoryList) {
+            System.out.println("---------");
+            System.out.println(trajectory);
+        }
+    }
+
+    @Test
+    public void testShowByIndex(){
+        for (int i = 0; i < 5; i++) {
+            System.out.println("第"+i+"行==>"+etldsService.showByIndex(i).geteTlds().get(0).getDate());
+        }
 
     }
 }
