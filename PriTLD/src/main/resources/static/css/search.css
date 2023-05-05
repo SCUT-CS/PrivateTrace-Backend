@@ -1,0 +1,49 @@
+.fr{
+    font-size: 16px;
+}
+
+.fr #input{
+    /* margin-top:calc(20% - 20px); */
+    height: 45px;
+    width: 550px;
+    margin-left: 10px;
+    font-size: 16px;
+    padding: 150px;
+}
+
+.form{
+  height: 300px;
+  width: auto;
+  padding: 150px;
+}
+
+/* 设置外部容器样式 */
+.scroll-outer {
+    height: 300px;
+    overflow-y: scroll;
+}
+  
+  /* 设置内部容器样式 */
+.scroll-inner {
+    height: 1000px;
+    overflow-y: scroll;
+}
+  
+  /* 设置滚动条样式 */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+}
+  
+::-webkit-scrollbar-track {
+    background-color: #f2f2f2;
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+  
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+  

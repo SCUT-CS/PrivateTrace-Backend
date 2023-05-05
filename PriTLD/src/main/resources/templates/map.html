@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html{width: 100%;height: 100%;margin:0;}
+		#allmap{height:500px;width:100%;}
+		#r-result{width:100%;}
+	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text</title>
+    <!-- 引入jquery -->
+
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+	<script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=6lauGD3LqQgiXGtAE3x6lfrs9sfiBBCj"></script>
+
+
+    <script type="text/javascript">
+
+        a =  $.ajax({
+				url: "/priloc/check/"+"002",//json文件位置，文件名
+				type: "GET",//请求方式为get
+				dataType: "json", //返回数据格式为json
+				async: false,
+				success: function(data) {//请求成功完成后要执行的方法
+				   }
+				});
+				aa=a.responseText	;
+                var result=$.parseJSON(a["responseText"])
+                alert(a)
+                console.log(result)
+                console.log(result[0].location)
+    </script>
+    <title>基于GPS的位置追踪及地理围栏</title>
+</head>
+<body>
+    <div>
+    <div id="allmap"></div>
+    </div>
+    <div id="r-result">
+		<input type="button" onclick="add_overlay();" value="添加覆盖物" />
+		<input type="button" onclick="remove_overlay();" value="删除覆盖物" />
+    </div>
+    <div>
+
+<!--{#    <script type="text/javascript">#}-->
+<!--{#// a =#}-->
+<!--{#        a = $.ajax({#}-->
+<!--{#				url: "http://127.0.0.1:8001/static/test/test.json",//json文件位置，文件名#}-->
+<!--{#				type: "GET",//请求方式为get#}-->
+<!--{#				dataType: "json", //返回数据格式为json#}-->
+<!--{#                //crossDomain: true,#}-->
+<!--{#				async: false,#}-->
+<!--{#				success: function(data) {//请求成功完成后要执行的方法#}-->
+<!--{#				   }#}-->
+<!--{#				});#}-->
+<!--{#        aa=a.responseText	;#}-->
+<!--{#        result=$.parseJSON(a["responseText"])#}-->
+<!--{#        result#}-->
+<!--{#    </script>#}-->
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMapGL.Map("allmap");
+    console.log(result[0].location.latitude);
+    console.log(result[0].location.longitude);
+	var point = new BMapGL.Point(result[0].location.longitude,result[0].location.latitude);
+	map.centerAndZoom(point, 20);
+
+	//var marker = new BMapGL.Marker(new BMapGL.Point( result[0].location.longitude,result[0].location.latitude)); // 创建点
+
+    for(var i = 1;i<result.length;i++){
+	var polyline = new BMapGL.Polyline([
+
+		// {#new BMapGL.Point(40.008304, 116.319876),#}
+		// {#new BMapGL.Point(116.405, 39.920),#}
+        new BMapGL.Point( result[i-1].location.longitude,result[i-1].location.latitude),
+        new BMapGL.Point( result[i].location.longitude,result[i].location.latitude)
+
+	], {strokeColor: "yellow" , strokeWeight:5, strokeOpacity:1});   //创建折线
+    }
+    var marker = new BMapGL.Marker(new BMapGL.Point( result[0].location.longitude,result[0].location.latitude))
+
+
+
+
+
+
+	//添加覆盖物
+	function add_overlay(){
+		map.addOverlay(marker);            //增加点
+		map.addOverlay(polyline);          //增加折线
+
+	}
+	//清除覆盖物
+	function remove_overlay(){
+		map.clearOverlays();
+	}
+	add_overlay();
+</script>
+

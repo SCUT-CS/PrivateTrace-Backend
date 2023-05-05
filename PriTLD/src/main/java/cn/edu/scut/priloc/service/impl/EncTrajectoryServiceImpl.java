@@ -7,6 +7,7 @@ import cn.edu.scut.priloc.mapper.BTreePlus;
 import cn.edu.scut.priloc.mapper.Entry;
 import cn.edu.scut.priloc.pojo.*;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
+import cn.edu.scut.priloc.util.CoordinateTransformUtil;
 import cn.edu.scut.priloc.util.EncryptDecryptUtil;
 import cn.edu.scut.priloc.util.TreeUtils;
 import org.apache.commons.math3.util.FastMath;
@@ -31,11 +32,12 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     }
 
     @Override
-    public void add(EncTrajectory encTrajectory) {
+    public void add(EncTrajectory encTrajectory,String name) {
         //将轨迹存储到数据库（序列化）
-        TreeUtils.setETlds(encTrajectory);
+        TreeUtils.setETlds(encTrajectory,name);
         //添加到索引树上 调用service方法
         BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
+        beginEndPath.setPath(name);
         Entry<BeginEndPath> entry=new Entry<>(beginEndPath.getBeginTime(), beginEndPath);
         BTreePlus<BeginEndPath> bTreePlus=TreeUtils.getTree();
         bTreePlus.addEntry(entry);
@@ -76,7 +78,14 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     public List<Trajectory> getTrajectoryList(ArrayList<BeginEndPath> beginEndPathArrayList) throws IOException, ClassNotFoundException {
         List<Trajectory> trajectories = new ArrayList<>();
         for (BeginEndPath beginEndPath : beginEndPathArrayList) {
-            trajectories.add(TreeUtils.getTlds(beginEndPath));
+            Trajectory trajectory = TreeUtils.getTlds(beginEndPath);
+            //坐标转换
+            for (TimeLocationData tld : trajectory.getTlds()) {
+                double[] bd09 = CoordinateTransformUtil.wgs84tobd09(tld.getLocation().getLongitude(), tld.getLocation().getLatitude());
+                tld.getLocation().setLongitude(bd09[0]);
+                tld.getLocation().setLatitude(bd09[1]);
+            }
+            trajectories.add(trajectory);
         }
         return trajectories;
     }

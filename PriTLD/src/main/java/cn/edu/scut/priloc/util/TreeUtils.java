@@ -46,12 +46,12 @@ public class TreeUtils {
             throw new RuntimeException(e);
         }
     }
-    public static void setETlds(EncTrajectory encTrajectory){
+    public static void setETlds(EncTrajectory encTrajectory,String name){
         try {
             //创建以该用户id命名的目录
             File file = new File(DBPath +"\\"+encTrajectory.getUserId());
             file.mkdir();
-            String name=format.format(encTrajectory.geteTlds().get(0).getDate())+".txt";
+            name = name.split("\\.")[0]+".txt";
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file.getPath() + "\\" + name));
             outputStream.writeObject(encTrajectory);
         } catch (IOException e) {

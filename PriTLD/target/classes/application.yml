@@ -5,6 +5,10 @@ server:
 spring:
   profiles:
     active: fzy
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
 ---
 tree:
   db-path: E:\GitHub\PriTLD\PriTLD\DataBase

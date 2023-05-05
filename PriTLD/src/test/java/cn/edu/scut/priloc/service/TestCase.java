@@ -22,7 +22,7 @@ public class TestCase {
     public void testAdd() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\003\\Trajectory\\20081024020227.plt");
         Trajectory trajectory=reader.load("003");
-        etldsService.add(etldsService.encrypt(trajectory));
+        etldsService.add(etldsService.encrypt(trajectory),"20081024020227.plt");
     }
 
     @Test

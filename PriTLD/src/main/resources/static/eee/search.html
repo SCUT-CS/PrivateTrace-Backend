@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>奇怪的页面</title>
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/search.css" rel="stylesheet">
+</head>
+<body>
+<div class="box">
+    <div class="fl">
+        <div class="container">
+          <a href="index.html"><button class="btn">跳转到页面1</button></a>
+          <a href="search.html"><button class="btn">跳转到页面2</button></a>
+        </div>
+    </div>
+    <div class="fr">
+        <form action="" class="form">
+        <input type="file" id="fileInput">
+        </form>
+        <div class="scroll-outer">
+            <div class="scroll-inner">
+              <pre id="textContent"></pre>
+            </div>
+        </div>            
+    </div>
+</div>
+</body>
+<script>
+    // 获取滚动容器和文本容器
+    var scrollContainer = document.querySelector('.scroll-outer');
+    var textContent = document.getElementById('textContent');
+
+    // 监听文件选择框的 change 事件
+    fileInput.addEventListener('change', function(event) {
+    // 获取选择的文件
+    var file = event.target.files[0];
+
+    // 创建 FileReader 对象
+    var reader = new FileReader();
+
+    // 监听 FileReader 的 load 事件，读取文件内容
+    reader.addEventListener('load', function(event) {
+        // 获取文件内容
+        var content = event.target.result;
+
+        // 将文件内容添加到文本容器中
+        textContent.innerText = content;
+        });
+        // 读取文件
+        reader.readAsText(file);
+    });
+</script>
+</html>

@@ -2,8 +2,10 @@ package cn.edu.scut.priloc.web.controller;
 
 import cn.edu.scut.priloc.pojo.BeginEndPath;
 import cn.edu.scut.priloc.pojo.EncTrajectory;
+import cn.edu.scut.priloc.pojo.TimeLocationData;
 import cn.edu.scut.priloc.pojo.Trajectory;
 import cn.edu.scut.priloc.service.EncTrajectoryService;
+import cn.edu.scut.priloc.util.CoordinateTransformUtil;
 import cn.edu.scut.priloc.util.TrajectoryReader;
 import cn.edu.scut.priloc.util.TreeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class doController {
 
     @Value("${tree.temp-path}")
     private String tempPath;
-    @GetMapping("/upload/{userId}")
+    @PostMapping("/upload/{userId}")
     public Trajectory upload(
             @RequestBody MultipartFile multipartFile,
             @PathVariable String userId,
@@ -38,7 +40,8 @@ public class doController {
         //获取明文轨迹
         System.out.println(request.getServletContext().getRealPath(""));
         //获取文件暂存路径
-        String path=tempPath +"\\"+ multipartFile.getOriginalFilename();
+        String name=multipartFile.getOriginalFilename();
+        String path=tempPath +"\\"+ name;
         multipartFile.transferTo(new File(path));
         File file = new File(path);
         TrajectoryReader reader=new TrajectoryReader(file);
@@ -46,7 +49,15 @@ public class doController {
         System.out.println(file.delete());
 
         //安全性考虑，传到session
-        request.getSession().setAttribute("tlds"+userId,trajectory);
+        HttpSession session = request.getSession();
+        session.setAttribute("tlds"+userId,trajectory);
+        session.setAttribute("fileName"+userId,name);
+        //坐标转换
+        for (TimeLocationData tld : trajectory.getTlds()) {
+            double[] bd09 = CoordinateTransformUtil.wgs84tobd09(tld.getLocation().getLongitude(), tld.getLocation().getLatitude());
+            tld.getLocation().setLongitude(bd09[0]);
+            tld.getLocation().setLatitude(bd09[1]);
+        }
         return trajectory;
     }
 
@@ -86,7 +97,9 @@ public class doController {
         }
         boolean flag = eTldsService.query(encTrajectories,encTrajectory);
         if(flag) {//如果判断交错，
-            eTldsService.add(encTrajectory);//添加到阳性库
+            String name = (String) session.getAttribute("fileName" + userId);
+            System.out.println(name);
+            //eTldsService.add(encTrajectory);//添加到阳性库
         }
         session.setAttribute(userId+"list",beginEndPathList);
         return flag;

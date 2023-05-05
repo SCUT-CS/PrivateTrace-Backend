@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+
+        .map {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+
+</head>
+<body>
+<style>
+       .el-tooltip__popper{max-width:800px;}
+</style>
+<div id="app">
+
+    <!--搜索表单-->
+<!--    <el-form :inline="true" :model="brand" class="demo-form-inline">-->
+
+<!--        <el-form-item label="当前状态">-->
+<!--            <el-select v-model="brand.status" placeholder="当前状态">-->
+<!--                <el-option label="启用" value="1"></el-option>-->
+<!--                <el-option label="禁用" value="0"></el-option>-->
+<!--            </el-select>-->
+<!--        </el-form-item>-->
+
+<!--        <el-form-item label="企业名称">-->
+<!--            <el-input v-model="brand.companyName" placeholder="企业名称"></el-input>-->
+<!--        </el-form-item>-->
+
+<!--        <el-form-item label="品牌名称">-->
+<!--            <el-input v-model="brand.brandName" placeholder="品牌名称"></el-input>-->
+<!--        </el-form-item>-->
+
+<!--        <el-form-item>-->
+<!--            <el-button type="primary" @click="onSubmit">查询</el-button>-->
+<!--        </el-form-item>-->
+<!--    </el-form>-->
+
+    <!--按钮-->
+
+    <el-row>
+        <el-button type="primary" plain @click="uploadDialogVisible = true">上传轨迹</el-button>
+    </el-row>
+    <!--预览对话框-->
+    <el-dialog
+            
+            title="轨迹预览"
+            :visible.sync="previewDialogVisible"
+            width="50%"
+            >
+        <el-table :data="trajectory" max-height="70%">
+            <el-table-column property="date" label="时间" width="200"></el-table-column>
+            <el-table-column property="location.latitude" label="纬度"></el-table-column>
+            <el-table-column property="location.longitude" label="经度"></el-table-column>
+        </el-table>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="previewDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleEncrypt">加 密</el-button>
+        </span>
+
+    </el-dialog>
+    <!--加密预览对话框-->
+    <el-dialog
+
+            title="加密轨迹预览"
+            :visible.sync="previewEncDialogVisible"
+            width="80%"
+    >
+        <el-table :data="encTrajectory" max-height="70%">
+            <el-table-column property="date" label="时间" width="200"></el-table-column>
+            <el-table-column property="encLocation.lati" label="纬度" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column property="encLocation.longi" label="经度" :show-overflow-tooltip="true"></el-table-column>
+        </el-table>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="previewEncDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleQuery">查 询</el-button>
+        </span>
+
+    </el-dialog>
+    <!--查询结果对话框-->
+<!--    <el-dialog-->
+<!--        title="查询结果"-->
+<!--        :visible.sync="queryDialogVisible"-->
+<!--        width="50%"-->
+<!--        -->
+<!--        >-->
+<!--        <div>-->
+<!--            <div id="allmap"></div>-->
+<!--        </div>-->
+<!--    </el-dialog>-->
+
+    <!--上传文件-->
+    <el-dialog
+            title="上传轨迹"
+            :visible.sync="uploadDialogVisible"
+            width="30%"
+            style="text-align: center"
+    >
+        <el-upload
+                class="upload-demo"
+                drag
+                action="#"
+                :file-list="fileList"
+                :on-change="uploadFile"
+                :auto-upload="false"
+                :limit = "1"
+                >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传plt文件</div>
+        </el-upload>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="uploadDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="confirmUpload()">上 传</el-button>
+        </div>
+    </el-dialog>
+    <template>
+        <baidu-map
+                class="map"
+                :center="center"
+                :zoom="zoom"
+                :scroll-wheel-zoom="true"
+                @ready="handler" >
+        </baidu-map>
+    </template>
+
+    <!--表格-->
+    <template>
+        <el-table
+                :data="tableData"
+                style="width: 100%"
+                height="100%"
+                :row-class-name="tableRowClassName"
+                @selection-change="handleSelectionChange"
+        >
+
+            <el-table-column
+                    type="index"
+                    width="50">
+            </el-table-column>
+
+            <el-table-column
+                    prop="userId"
+                    label="用户名"
+                    width="100"
+                    align="center"
+            >
+            </el-table-column>
+            <el-table-column
+                    prop="beginTime"
+                    label="轨迹开始时间"
+                    align="center"
+            >
+            </el-table-column>
+            <el-table-column
+                    prop="endTime"
+                    label="轨迹结束时间"
+                    align="center"
+            >
+
+            </el-table-column>
+            <el-table-column
+                    label="-"
+                    width="100"
+                    align="center"
+            >
+
+            </el-table-column>
+<!--            &lt;!&ndash; 实体类里要有对应的get方法将status转为中文 &ndash;&gt;-->
+<!--            <el-table-column-->
+<!--                    prop="statusStr"-->
+<!--                    align="center"-->
+<!--                    label="当前状态">-->
+<!--            </el-table-column>-->
+
+<!--            <el-table-column-->
+<!--                    align="center"-->
+<!--                    label="操作">-->
+<!--                <template slot-scope="scope">-->
+<!--                <el-row>-->
+<!--                    -->
+<!--                        <el-button type="primary"plain @click="selectById(scope.row)">修改</el-button>-->
+<!--                        <el-button type="danger" plain @click="deleteById(scope.row)">删除</el-button>-->
+<!--                    -->
+<!--                    -->
+<!--                </el-row>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
+
+        </el-table>
+    </template>
+    <!--分页工具条-->
+    <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="5"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+    </el-pagination>
+
+</div>
+<!--引入百度api-->
+<script src="https://unpkg.com/vue-baidu-map"></script>
+<script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=6lauGD3LqQgiXGtAE3x6lfrs9sfiBBCj"></script>
+<script src="https://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?type=webgl&v=1.0&ak=6lauGD3LqQgiXGtAE3x6lfrs9sfiBBCj"></script>
+
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+<script>
+    Vue.use(VueBaiduMap.default, {
+        ak: '6lauGD3LqQgiXGtAE3x6lfrs9sfiBBCj'
+    })
+</script>
+<script>
+    new Vue({
+        el: "#app",
+        
+        mounted(){
+        	//页面加载完成后 发送异步请求 获取数据
+        	//this.selectAll()
+        },
+        methods: {
+        	
+        	
+        	// selectAll(){
+        	//
+        	// 	axios({
+        	// 		method:"post",
+        	// 		url:"http://localhost/brand-case/brand/selectByPageAndConditions?currentPage="+this.currentPage+"&pageSize="+this.pageSize,
+            //         data:this.brand
+        	// 	}).then(resp=>{
+        	// 		this.tableData = resp.data.rows;
+            //         this.total = resp.data.total;
+        	// 	})
+        	// },
+            //
+            // selectById(row){
+            //
+            //     axios({
+            //         method:"post",
+            //         url:"http://localhost/brand-case/brand/selectById",
+            //     	data:row.id
+            //     }).then(resp=>{
+            //         this.brand.brandName=resp.data.brandName;
+            //         this.brand.companyName=resp.data.companyName;
+            //         this.brand.ordered=resp.data.ordered;
+            //         this.brand.description=resp.data.description;
+            //         this.brand.status=resp.data.status;
+            //         this.brand.id=resp.data.id;
+            //         this.uploadDialogVisible=true;
+            //         console.log(this.brand);
+            //
+            //     })
+            // },
+
+            uploadFile (file,fileList) {
+                this.fileList=fileList;
+                console.log(this.fileList, "sb");
+            },
+
+            confirmUpload(){
+
+                var formDate = new FormData();
+                formDate.append("multipartFile",this.fileList[0].raw);
+                axios.post("http://localhost/priloc/upload/"+this.userId,formDate,{
+                    "Content-Type": "multipart/form-data"
+                }).then(resp=>{
+                    //后端将上传的文件转换成对象后返回前端预览展示
+                    this.trajectory=resp.data.tlds;
+                    console.log(this.trajectory,"接收的轨迹数据")
+                    //打开预览Dialog
+                    this.previewDialogVisible = true;
+                    //关闭上传Dialog
+                    this.uploadDialogVisible = false;
+                    // if(resp.data=="success"){
+                	// 	//关闭弹窗
+                	// 	this.previewDialogVisible = false;
+                	//
+                	// 	this.selectAll();
+                	//
+                	// 	//消息提示
+                	// 	this.$message({
+                	// 		message:'修改成功!',type: 'success'
+                	// 	});
+                	// }
+                })
+            },
+
+            handleEncrypt(){
+                axios.get("http://localhost/priloc/encrypt/"+this.userId,null)
+                    .then(resp =>{
+                        this.encTrajectory=resp.data.eTlds;
+                        this.previewDialogVisible = false;
+                        this.previewEncDialogVisible = true;
+
+                    })
+            },
+            handleQuery(){
+                axios.get("http://localhost/priloc/query/"+this.userId,null)
+                    .then(resp =>{
+                        this.result=resp.data
+                        console.log(this.result,"查询结果")
+                        this.previewEncDialogVisible = false
+                        this.handleCheck()
+                    })
+            },
+            handler ({BMap, map}) {
+                console.log(BMap, map)
+                this.BMap=BMap
+                this.map=map
+                this.center.lng = 116.404
+                this.center.lat = 39.915
+                this.zoom = 15
+            },
+        	handleCheck(){
+                axios.get("http://localhost/priloc/check/"+this.userId,null)
+                    .then(resp=>{
+                        let BMap=this.BMap
+                        let map=this.map
+                        //console.log(resp.data[0].tlds)
+                        map.clearOverlays()
+
+                        //显示查询结果出来的轨迹
+                        for (let i = 0; i < resp.data.length; i++) {
+                            let points=[]
+                            for (let j = 0; j <resp.data[i].tlds.length; j++) {
+                                points.push(
+                                    new BMap.Point(resp.data[i].tlds[j].location.longitude,
+                                                    resp.data[i].tlds[j].location.latitude))
+                            }
+                            let polyline = new BMap.Polyline(points,{strokeColor:"blue", strokeWeight:1})
+                            map.addOverlay(polyline)
+                        }
+                        //显示用户轨迹
+                        let userPoints=[]
+                        for (let i = 0; i < this.trajectory.length; i++) {
+                            userPoints.push(
+                                new BMap.Point(this.trajectory[i].location.longitude,
+                                                this.trajectory[i].location.latitude));
+                        }
+                        let userPolyline = new BMap.Polyline(userPoints,{strokeColor: "black", strokeWeight:1});
+                        map.setCenter(userPoints[0]);
+                        let marker= new BMap.Marker(userPoints[0])
+                        map.addOverlay(userPolyline);
+                        map.addOverlay(marker);
+                        // console.log(userPoints);
+                        // this.showMap(userPoints);
+                    })
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 1) {
+                    return 'warning-row';
+                } else if (rowIndex === 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            // 复选框选中后执行的方法
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+
+                console.log(this.multipleSelection)
+            },
+            // 查询方法
+            // onSubmit() {
+            //     //console.log(this.brand);
+            //     this.selectAll();
+            // },
+            // 添加数据
+            // addBrand(){
+            //     //console.log(this.brand);
+            //
+            //     axios({
+            //     	method:"post",
+            //     	url:"http://localhost/brand-case/brand/add",
+            //     	data:this.brand
+            //     }).then(resp => {
+            //     	if(resp.data=="success"){
+            //     		//关闭弹窗
+            //     		this.previewDialogVisible = false;
+            //
+            //     		this.selectAll();
+            //
+            //     		//消息提示
+            //     		this.$message({
+            //     			message:'添加成功!',type: 'success'
+            //     		});
+            //
+            //     	}
+            //     })
+            // },
+
+            //分页
+            handleSizeChange(val) {
+                //console.log(`每页 ${val} 条`);
+                this.pageSize=val;
+                this.selectAll();
+            },
+            handleCurrentChange(val) {
+                //console.log(`当前页: ${val}`);
+                this.currentPage=val;
+                this.selectAll();
+            }
+
+            //根据id删除单个
+            // deleteById(row){
+            //     //console.log(row.id);
+            //     this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+            //         confirmButtonText: '确定',
+            //         cancelButtonText: '取消',
+            //         type: 'warning'
+            //     }).then(() => {
+            //         axios({
+            //     	    method:"post",
+            //     	    url:"http://localhost/brand-case/brand/deleteById",
+            //     	    data:row.id
+            //         }).then(resp =>{
+            //     	    if(resp.data=="success"){
+            //
+            //     		this.selectAll();
+            //
+            //     		//消息提示
+            //     		this.$message({
+            //     			message:'删除成功!',type: 'success'
+            //     		});
+            //     	}
+            //     })
+            //     }).catch(() => {
+            //         this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //         });
+            //     });
+            //
+            // },
+            // //批量删除
+            // deleteByIds(){
+            //     this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+            //         confirmButtonText: '确定',
+            //         cancelButtonText: '取消',
+            //         type: 'warning'
+            //     }).then(() => {
+            //         for (var i = 0; i < this.multipleSelection.length; i++) {
+			// 		    let ele = this.multipleSelection[i];
+            //             this.selectedIds[i] =ele.id;
+			// 	    }
+            //         var _this=this;
+            //         axios({
+            //     	    method:"post",
+            //     	    url:"http://localhost/brand-case/brand/deleteByIds",
+            //     	    data:_this.selectedIds
+            //         }).then(function(resp){
+            //     	    if(resp.data=="success"){
+            //
+            //     		_this.selectAll();
+            //
+            //     		//消息提示
+            //     		_this.$message({
+            //     			message:'删除成功!',type: 'success'
+            //     		});
+            //     	}
+            //     })
+            //     }).catch(() => {
+            //         this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //         });
+            //     });
+                
+            //}
+
+        },
+        data() {
+            return {
+                //总条目数
+                total:0,
+                // 当前页码
+                currentPage: 1,
+                //页码条目数
+                pageSize:5,
+                center: {lng: 0, lat: 0},
+                zoom: 20,
+                BMap: '',
+                map:'',
+                polyline: {
+                    editing: false,
+                    paths: []
+                },
+                //地图是否展示标记
+                mapVisible:false,
+                // 查询对话框是否展示的标记
+                queryDialogVisible: true,
+                // 轨迹预览对话框是否展示的标记
+                previewDialogVisible: false,
+                // 加密轨迹预览对话框是否展示的标记
+                previewEncDialogVisible: false,
+                // 上传文件对话框是否展示的标记
+                uploadDialogVisible: false,
+                //用户id
+                userId: '002',
+                // 明文轨迹模型数据
+                trajectory: [{
+                    location: {
+                        latitude: '',
+                        longitude: ''
+                    },
+                    date: '',
+                }],
+                // 密文轨迹模型数据
+                encTrajectory: [{
+                    encLocation: {
+                        lati: '',
+                        longi: ''
+                    },
+                    date: '',
+                }],
+                //文件
+                fileList:[],
+                //被选中的id数组
+                selectedIds:[],
+                //查询结果
+                result: true,
+                // 复选框选中数据集合
+                multipleSelection: [],
+                // 表格数据
+                tableData: [{
+                    userId: '001',
+                    beginTime: '***',
+                    endTime: '***',
+                }]
+            }
+        }
+    })
+
+</script>
+
+</body>
+</html>
