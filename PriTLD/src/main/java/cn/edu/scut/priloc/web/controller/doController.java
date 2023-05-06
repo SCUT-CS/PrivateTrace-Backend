@@ -51,7 +51,8 @@ public class doController {
         multipartFile.transferTo(new File(path));
         File file = new File(path);
         TrajectoryReader reader=new TrajectoryReader(file);
-        Trajectory trajectory = reader.load(userId);
+        List<Trajectory> trajectoryList = reader.load(userId);
+        Trajectory trajectory = trajectoryList.get(0);
         System.out.println(file.delete());
 
         //安全性考虑，传到session

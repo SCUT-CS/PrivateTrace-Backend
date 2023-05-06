@@ -21,7 +21,8 @@ public class TestCase {
     @Test
     public void testAdd() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\003\\Trajectory\\20081024020227.plt");
-        Trajectory trajectory=reader.load("003");
+        List<Trajectory> trajectoryList = reader.load("003");
+        Trajectory trajectory = trajectoryList.get(0);
         etldsService.add(etldsService.encrypt(trajectory),trajectory,"20081024020227.plt");
     }
 
@@ -32,7 +33,8 @@ public class TestCase {
         for (int i = 0; i < files.length; i++) {
             System.out.println("第"+i+"个文件");
             TrajectoryReader reader=new TrajectoryReader(files[i]);
-            Trajectory trajectory=reader.load("001");
+            List<Trajectory> trajectoryList = reader.load("003");
+            Trajectory trajectory = trajectoryList.get(0);
             System.out.println(trajectory.getTlds().get(0).getDate());
         }
 
@@ -41,7 +43,8 @@ public class TestCase {
     @Test
     public void testEncrypt() throws IOException, ParseException {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\000\\Trajectory\\20081024020959.plt");
-        Trajectory trajectory=reader.load("001");
+        List<Trajectory> trajectoryList = reader.load("001");
+        Trajectory trajectory = trajectoryList.get(0);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("test");
         EncTrajectory encTrajectory = etldsService.encrypt(trajectory);

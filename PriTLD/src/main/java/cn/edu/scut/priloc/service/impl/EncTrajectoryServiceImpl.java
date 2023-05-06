@@ -79,7 +79,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         int size=tlds.size();
         int step=size/5+1;
         for(int i=0,j=0; i< size; i+=step,j++){
-            futures.add(encryptDecryptUtil.doEncrypt(tlds, i, Fastmath.min(i + step, size)));
+            futures.add(encryptDecryptUtil.doEncrypt(tlds, i, FastMath.min(i + step, size)));
         }
         List<EncTimeLocationData> eTlds = new ArrayList<>();
         for (Future<ArrayList<EncTimeLocationData>> future : futures) {
