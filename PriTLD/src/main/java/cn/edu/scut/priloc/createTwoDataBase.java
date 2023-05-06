@@ -42,6 +42,10 @@ public class createTwoDataBase {
                 TrajectoryReader reader = new TrajectoryReader(trajectories[j].getPath());
                 List<Trajectory> trajectoryList = reader.load(id);
                 for (Trajectory tlds : trajectoryList) {
+                    //如果只有一个点，就不加密了
+                    if(tlds.getTlds().size() == 1){
+                        continue;
+                    }
                     EncTrajectory encTrajectory = encTrajectoryService.encrypt(tlds);
                     String name = format.format(tlds.getTlds().get(0).getDate());
                     String encPath = "C:\\Users\\18124\\Desktop\\DataBase\\" + id + "\\" + name + ".txt";

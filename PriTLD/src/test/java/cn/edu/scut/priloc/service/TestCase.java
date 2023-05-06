@@ -28,13 +28,11 @@ public class TestCase {
 
     @Test
     public void testSetDate() throws FileNotFoundException, ParseException {
-        File file = new File("C:\\Users\\18124\\Desktop\\Data\\000\\Trajectory");
-        File[] files = file.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            System.out.println("第"+i+"个文件");
-            TrajectoryReader reader=new TrajectoryReader(files[i]);
-            List<Trajectory> trajectoryList = reader.load("003");
-            Trajectory trajectory = trajectoryList.get(0);
+        File file = new File("C:\\Users\\18124\\Desktop\\Data\\001\\Trajectory\\20081029234123.plt");
+        TrajectoryReader reader=new TrajectoryReader(file);
+        List<Trajectory> trajectoryList = reader.load("000");
+        System.out.println(trajectoryList.size());
+        for (Trajectory trajectory : trajectoryList) {
             System.out.println(trajectory.getTlds().get(0).getDate());
         }
 

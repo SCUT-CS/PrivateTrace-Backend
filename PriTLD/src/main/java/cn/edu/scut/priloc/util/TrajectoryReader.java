@@ -75,13 +75,15 @@ public class TrajectoryReader {
                 //判断轨迹断点
                 if (Duration.between(lastTld.getDate().toInstant(),tld.getDate().toInstant())
                         .compareTo(Duration.of(30, ChronoUnit.SECONDS))>0){
+                    //System.out.println(tempTlds);
                     tempList.add(new Trajectory(tempTlds,userId));
-                    tempTlds.clear();
+                    tempTlds=new ArrayList<>();
                 }
             }
             tempTlds.add(tld);
             lastDateString=date;
         }
+        tempList.add(new Trajectory(tempTlds,userId));
         return tempList;
     }
 
