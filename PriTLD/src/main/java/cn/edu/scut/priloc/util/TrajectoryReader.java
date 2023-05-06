@@ -39,7 +39,7 @@ public class TrajectoryReader {
         this.scanner=new TrajectoryReader(new File(path)).getScanner();
     }
 
-    public Trajectory load(String userId) throws ParseException {
+    public List<Trajectory> load(String userId) throws ParseException {
         String lastDateString=null;
         boolean flag = false;//是否跨过一天的标志
         List<TimeLocationData> tlds = new ArrayList<>();
@@ -82,7 +82,7 @@ public class TrajectoryReader {
             tempTlds.add(tld);
             lastDateString=date;
         }
-        return new Trajectory(tlds,userId);
+        return tempList;
     }
 
     public Trajectory loadWithBep(BeginEndPath beginEndPath) {
