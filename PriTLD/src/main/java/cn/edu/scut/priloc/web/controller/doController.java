@@ -34,7 +34,7 @@ public class doController {
     }
 
     @GetMapping("/showByIndex")
-    public EncTrajectory showByIndex(@RequestParam("index") int index){
+    public EncTrajectory showByIndex(@RequestParam("index") Integer index){
         return eTldsService.showByIndex(index);
     }
     @PostMapping("/upload/{userId}")
@@ -106,7 +106,7 @@ public class doController {
             System.out.println(name);
             Trajectory trajectory = (Trajectory) session.getAttribute("tlds" + userId);
             //TODO 最后记得测试添加
-            //eTldsService.add(encTrajectory,trajectory,name);//添加到阳性库
+            eTldsService.add(encTrajectory,trajectory,name);//添加到阳性库
         }
         session.setAttribute(userId+"list",beginEndPathList);
         return flag;

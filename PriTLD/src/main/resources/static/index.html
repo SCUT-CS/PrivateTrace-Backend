@@ -122,6 +122,14 @@
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传plt文件</div>
         </el-upload>
+
+
+        <el-input
+                placeholder="请输入您的用户名"
+                v-model="userId"
+                clearable
+                >
+        </el-input>
         <div slot="footer" class="dialog-footer">
             <el-button @click="uploadDialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="confirmUpload()">上 传</el-button>
@@ -179,7 +187,7 @@
             >
                 <template slot-scope="scope">
                     <el-row>
-                        <el-button type="primary"plain @click="showByIndex(scope.row)">详情</el-button>
+                        <el-button type="primary"plain @click="showByIndex(scope.$index)">详情</el-button>
                     </el-row>
                 </template>
             </el-table-column>
@@ -248,14 +256,12 @@
         		})
         	},
             //
-            showByIndex(row){
-                axios({
-                    method:"get",
-                    url:"http://localhost:8080/priloc/showByIndex",
-                	data:row.id
-                }).then(resp=>{
+            showByIndex(index){
+                console.log(index)
+                axios.get("http://localhost:8080/priloc/showByIndex?index="+index,null)
+                    .then(resp=>{
                     this.detailDialogVisible=true
-                    this.encTrajectory=resp.data
+                    this.encTrajectory=resp.data.eTlds
                     console.log(this.encTrajectory)
 
                 })
@@ -267,7 +273,10 @@
             },
 
             confirmUpload(){
-
+                if(this.userId===''){
+                    this.$message.warning("请输入用户名哦")
+                    return
+                }
                 var formDate = new FormData();
                 formDate.append("multipartFile",this.fileList[0].raw);
                 axios.post("http://localhost:8080/priloc/upload/"+this.userId,formDate,{
@@ -308,7 +317,16 @@
                     .then(resp =>{
                         this.result=resp.data
                         console.log(this.result,"查询结果")
-                        if(!this.result) this.changeRow=-1//没有交错，不会产生新增行
+                        if(this.result){
+                            this.$message.error('发现与阳性接触，已将您的加密轨迹添加到数据库（列表已高亮显示）')
+
+                        } else{
+                            this.changeRow=-1//没有交错，不会产生新增行
+                            //消息提示
+                            this.$message({
+                                message:'添加成功!',type: 'success'
+                            });
+                        }
                         this.previewEncDialogVisible = false
                         this.handleCheck()
                     })
@@ -324,6 +342,7 @@
         	handleCheck(){
                 axios.get("http://localhost:8080/priloc/check/"+this.userId,null)
                     .then(resp=>{
+                        console.log(resp.data)
                         let BMap=this.BMap
                         let map=this.map
                         //console.log(resp.data[0].tlds)
@@ -497,7 +516,7 @@
                 //地图是否展示标记
                 mapVisible:false,
                 // 详情对话框是否展示的标记
-                detailDialogVisible: true,
+                detailDialogVisible: false,
                 // 轨迹预览对话框是否展示的标记
                 previewDialogVisible: false,
                 // 加密轨迹预览对话框是否展示的标记
@@ -505,7 +524,7 @@
                 // 上传文件对话框是否展示的标记
                 uploadDialogVisible: false,
                 //用户id
-                userId: '002',
+                userId: '',
                 // 明文轨迹模型数据
                 trajectory: [{
                     location: {

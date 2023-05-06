@@ -9,7 +9,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 public class TrajectoryReader {
 
@@ -35,15 +40,15 @@ public class TrajectoryReader {
     }
 
     public Trajectory load(String userId) throws ParseException {
-        String lastDate=null;
+        String lastDateString=null;
         boolean flag = false;//是否跨过一天的标志
         List<TimeLocationData> tlds = new ArrayList<>();
         while(scanner.hasNext()){
             String[] tokens = scanner.next().split(",");
             String dateString = tokens[5]+" "+tokens[6];
             //判断是否跨过一天
-            if(lastDate!=null&&!tokens[5].equals(lastDate)) flag = true;//跨过一天
-            lastDate=tokens[5];
+            if(lastDateString!=null&&!tokens[5].equals(lastDateString)) flag = true;//跨过一天
+            lastDateString=tokens[5];
             Location location = new Location(Double.parseDouble(tokens[0]),Double.parseDouble(tokens[1]));
             tlds.add(new TimeLocationData(location,dateFormat.parse(dateString)));
         }
@@ -54,15 +59,28 @@ public class TrajectoryReader {
         if (!flag)//没有跨一天，则随机选择一天
             dateString= dateStrings[random.nextInt(2)];
         else dateString=dateStrings[0];
-        lastDate=null;
-        for (TimeLocationData tld : tlds) {
+        lastDateString=null;
+        List<Trajectory> tempList = new ArrayList<>();
+        List<TimeLocationData> tempTlds = new ArrayList<>();
+        for (int i = 0; i < tlds.size(); i++){
+            TimeLocationData tld = tlds.get(i);
             String date = dateFormat.format(tld.getDate()).split(" ")[0];//获取日期字符串
-            if(lastDate!=null&&!date.equals(lastDate)){
+            if(lastDateString!=null&&!date.equals(lastDateString)){
                 dateString=dateStrings[1];
             }
-            lastDate=date;
             String timeString = dateFormat.format(tld.getDate()).split(" ")[1];//获取时间字符串
             tld.setDate(dateFormat.parse(dateString+timeString));
+            if(i>0){
+                TimeLocationData lastTld = tlds.get(i - 1);
+                //判断轨迹断点
+                if (Duration.between(lastTld.getDate().toInstant(),tld.getDate().toInstant())
+                        .compareTo(Duration.of(30, ChronoUnit.SECONDS))>0){
+                    tempList.add(new Trajectory(tempTlds,userId));
+                    tempTlds.clear();
+                }
+            }
+            tempTlds.add(tld);
+            lastDateString=date;
         }
         return new Trajectory(tlds,userId);
     }

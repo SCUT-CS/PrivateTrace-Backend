@@ -34,3 +34,4 @@ PriTLD/src/main/java/cn/edu/scut/priloc/util/StreamGo.java
 .idea/vcs.xml
 DataBase
 UnencDataBase
+*.lst
