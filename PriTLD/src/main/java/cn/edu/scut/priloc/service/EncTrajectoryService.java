@@ -16,7 +16,7 @@ public interface EncTrajectoryService {
 
     EncTrajectory showByIndex(int index);
 
-    void add(EncTrajectory encTrajectory,Trajectory trajectory,String name);
+    void add(EncTrajectory encTrajectory,Trajectory trajectory);
 
     ArrayList<BeginEndPath> selectByETLDs(EncTrajectory encTrajectory);
 

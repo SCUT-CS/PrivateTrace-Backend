@@ -46,25 +46,27 @@ public class TreeUtils {
             throw new RuntimeException(e);
         }
     }
-    public static void setETldsAndTlds(EncTrajectory encTrajectory, Trajectory trajectory,String name){
+    public static String setETldsAndTlds(EncTrajectory encTrajectory, Trajectory trajectory){
         try {
             //创建以该用户id命名的目录
             File File1 = new File(DBPath +"\\"+encTrajectory.getUserId());
             File1.mkdir();
             File File2 = new File(dataPath +"\\"+encTrajectory.getUserId());
             File2.mkdir();
-            name = name.split("\\.")[0]+".txt";
+            //生成文件名字
+            String name = format.format(trajectory.getTlds().get(0).getDate())+".txt";
             ObjectOutputStream outputStream1 = new ObjectOutputStream(new FileOutputStream(File1.getPath() + "\\" + name));
             outputStream1.writeObject(encTrajectory);
             ObjectOutputStream outputStream2 = new ObjectOutputStream(new FileOutputStream(File2.getPath() + "\\" + name));
             outputStream2.writeObject(trajectory);
+            return name;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     public static EncTrajectory getETlds(BeginEndPath bep){
         try {
-            String name = bep.getPath().split("\\.")[0]+".txt";
+            String name = bep.getPath();
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(DBPath+"\\"+bep.getUserId()+"\\"+name));
             return (EncTrajectory) inputStream.readObject();
         } catch (IOException e) {
@@ -75,7 +77,7 @@ public class TreeUtils {
     }
 
     public static Trajectory getTlds(BeginEndPath bep) throws IOException, ClassNotFoundException {
-        String name=bep.getPath().split("\\.")[0]+".txt";
+        String name=bep.getPath();
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(dataPath+"\\"+bep.getUserId()+"\\"+name));
         return (Trajectory) inputStream.readObject();
     }

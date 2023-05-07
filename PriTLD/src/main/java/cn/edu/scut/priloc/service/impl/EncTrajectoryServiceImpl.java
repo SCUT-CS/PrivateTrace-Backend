@@ -35,10 +35,14 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
 
     @Override
     public List<tableData> showAll() {
+        System.out.println("begin");
         BTreePlus<BeginEndPath> tree = TreeUtils.getTree();
+        System.out.println("get");
         ArrayList<BeginEndPath> all = tree.findAll();
         List<tableData> tableDatas=new ArrayList<>();
+        int i=0;
         for (BeginEndPath beginEndPath : all) {
+            System.out.println(i++);
             tableDatas.add(new tableData(beginEndPath));
         }
         return tableDatas;
@@ -52,9 +56,10 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
     }
 
     @Override
-    public void add(EncTrajectory encTrajectory,Trajectory trajectory,String name) {
+    public void add(EncTrajectory encTrajectory,Trajectory trajectory) {
         //将轨迹存储到数据库（序列化）
-        TreeUtils.setETldsAndTlds(encTrajectory,trajectory,name);
+        //获得序列化后的文件名
+        String name = TreeUtils.setETldsAndTlds(encTrajectory, trajectory);
         //添加到索引树上 调用service方法
         BeginEndPath beginEndPath=new BeginEndPath(encTrajectory);
         beginEndPath.setPath(name);

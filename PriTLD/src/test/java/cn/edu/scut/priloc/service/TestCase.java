@@ -23,9 +23,14 @@ public class TestCase {
         TrajectoryReader reader=new TrajectoryReader("E:\\GitHub\\PriTLD\\Data\\003\\Trajectory\\20081024020227.plt");
         List<Trajectory> trajectoryList = reader.load("003");
         Trajectory trajectory = trajectoryList.get(0);
-        etldsService.add(etldsService.encrypt(trajectory),trajectory,"20081024020227.plt");
+        etldsService.add(etldsService.encrypt(trajectory),trajectory);
     }
 
+    @Test
+    public  void testShowAll(){
+        etldsService.showAll();
+    }
+    
     @Test
     public void testSetDate() throws FileNotFoundException, ParseException {
         File file = new File("C:\\Users\\18124\\Desktop\\Data\\001\\Trajectory\\20081029234123.plt");
@@ -54,7 +59,7 @@ public class TestCase {
     }
     @Test
     public void testDecrypt() throws IOException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\003\\20081024175854.txt"));
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\002\\20081024000522.txt"));
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
         eTdls.setUserId("003");
         StopWatch stopWatch = new StopWatch();
@@ -69,9 +74,13 @@ public class TestCase {
 
     @Test
     public void testTree() throws IOException, ParseException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\000\\20081024020959.txt"));
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\004\\20081024005932.txt"));
         EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
-        eTdls.setUserId("000");
+        System.out.println(eTdls.geteTlds().get(0).getEncLocation());
+        System.out.println(eTdls.geteTlds().get(0).getDate());
+        System.out.println(eTdls.geteTlds().get(1).getDate());
+        System.out.println(eTdls.geteTlds().get(2).getDate());
+        eTdls.setUserId("003");
         ArrayList<BeginEndPath> beginEndPathList = etldsService.selectByETLDs(eTdls);
         System.out.println(beginEndPathList.size());
         List<EncTrajectory> encTrajectories = new ArrayList<>();
