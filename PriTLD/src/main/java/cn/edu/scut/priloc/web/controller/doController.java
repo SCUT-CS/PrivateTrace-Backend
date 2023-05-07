@@ -91,7 +91,6 @@ public class doController {
         HttpSession session = request.getSession();
         EncTrajectory encTrajectory = (EncTrajectory) session.getAttribute("etlds" + userId);
         session.removeAttribute("etlds" + userId);
-//        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("E:\\GitHub\\PriTLD\\PriTLD\\DataBase\\001\\20081023234104.txt"));
 //        EncTrajectory eTdls = (EncTrajectory) inputStream.readObject();
 //        eTdls.setUserId("000");
         ArrayList<BeginEndPath> beginEndPathList = eTldsService.selectByETLDs(encTrajectory);

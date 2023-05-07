@@ -40,9 +40,7 @@ public class EncTrajectoryServiceImpl implements EncTrajectoryService {
         System.out.println("get");
         ArrayList<BeginEndPath> all = tree.findAll();
         List<tableData> tableDatas=new ArrayList<>();
-        int i=0;
         for (BeginEndPath beginEndPath : all) {
-            System.out.println(i++);
             tableDatas.add(new tableData(beginEndPath));
         }
         return tableDatas;
