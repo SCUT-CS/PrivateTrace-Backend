@@ -25,30 +25,6 @@
 </style>
 <div id="app">
 
-    <!--搜索表单-->
-<!--    <el-form :inline="true" :model="brand" class="demo-form-inline">-->
-
-<!--        <el-form-item label="当前状态">-->
-<!--            <el-select v-model="brand.status" placeholder="当前状态">-->
-<!--                <el-option label="启用" value="1"></el-option>-->
-<!--                <el-option label="禁用" value="0"></el-option>-->
-<!--            </el-select>-->
-<!--        </el-form-item>-->
-
-<!--        <el-form-item label="企业名称">-->
-<!--            <el-input v-model="brand.companyName" placeholder="企业名称"></el-input>-->
-<!--        </el-form-item>-->
-
-<!--        <el-form-item label="品牌名称">-->
-<!--            <el-input v-model="brand.brandName" placeholder="品牌名称"></el-input>-->
-<!--        </el-form-item>-->
-
-<!--        <el-form-item>-->
-<!--            <el-button type="primary" @click="onSubmit">查询</el-button>-->
-<!--        </el-form-item>-->
-<!--    </el-form>-->
-
-    <!--按钮-->
 
     <el-row>
         <el-button type="primary" plain @click="uploadDialogVisible = true">上传轨迹</el-button>
@@ -157,7 +133,7 @@
 
             <el-table-column
                     type="index"
-                    width="50">
+                    width="60">
             </el-table-column>
 
             <el-table-column
@@ -193,16 +169,6 @@
             </el-table-column>
         </el-table>
     </template>
-    <!--分页工具条-->
-    <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[5, 10, 15, 20]"
-            :page-size="5"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
-    </el-pagination>
 
 </div>
 <!--引入百度api-->
@@ -241,10 +207,12 @@
         			//url:"http://localhost:8080/brand-case/brand/selectByPageAndConditions?currentPage="+this.currentPage+"&pageSize="+this.pageSize,
         		}).then(resp=>{
                     console.log(resp.data)
-                    if(this.changeRow>=0){//有发生变化的行
+                    if(this.result){//有发生变化的行
                         for (let i = 0; i < this.tableData.length; i++) {
-                            if(this.tableData[i]!==resp.data[i]){
-                                console.log(resp.data[i],'第'+i+1+'行')
+                            if(this.tableData[i].userId!==resp.data[i].userId
+                                &&this.tableData[i].beginTime!==resp.data[i].beginTime
+                                && this.tableData[i].endTime!==resp.data[i].endTime){
+                                console.log(resp.data[i],'第'+(i+1)+'行')
                                 this.changeRow=i
                                 break
                             }
@@ -318,16 +286,22 @@
                         this.result=resp.data
                         console.log(this.result,"查询结果")
                         if(this.result){
-                            this.$message.error('发现与阳性接触，已将您的加密轨迹添加到数据库（列表已高亮显示）')
+                            this.$message({
+                                showClose:'true',
+                                message:"发现与阳性接触，已将您的加密轨迹添加到数据库",
+                                type:'error'
+                            })
 
                         } else{
-                            this.changeRow=-1//没有交错，不会产生新增行
                             //消息提示
                             this.$message({
-                                message:'没有发现与阳性轨迹有接触~',type: 'success'
+                                showClose:'true',
+                                message:'没有发现与阳性轨迹有接触~',
+                                type: 'success',
                             });
                         }
                         this.previewEncDialogVisible = false
+                        this.showAll()
                         this.handleCheck()
                     })
             },
@@ -377,7 +351,7 @@
             },
             //找出新增的行
             tableRowClassName({row, rowIndex}) {
-                if (rowIndex === this.changeRow) {
+                if (rowIndex === this.changeRow&&this.result) {
                     return 'success-row';
                 }
                 return '';
@@ -546,7 +520,7 @@
                 //被选中的id数组
                 selectedIds:[],
                 //查询结果
-                result: true,
+                result: false,
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
@@ -555,7 +529,7 @@
                     beginTime: '***',
                     endTime: '***',
                 }],
-                changeRow: -1,
+                changeRow: 0
             }
         }
     })
